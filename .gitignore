@@ -1,0 +1,16 @@
+# Backend
+__pycache__/
+*.py[cod]
+.env
+.env.*
+.venv/
+.coverage
+
+# Runtime
+*.log
+run/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
