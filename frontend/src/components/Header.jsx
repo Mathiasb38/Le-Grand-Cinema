@@ -8,7 +8,7 @@ function Header() {
       <a className="logo-header" href="#accueil" aria-label="Le Grand Cinéma">
         <img src={logo} alt="Le Grand Cinéma" />
       </a>
-      <a className="login" href="#connexion">Connexion</a>
+      <button id="login" className="button-black" type="button">Connexion</button>
     </header>
   )
 }

@@ -46,15 +46,8 @@
   --color-danger: #eb4b43;
   --color-success: #29c783;
   --color-muted: #817c74;
-  --color-transparent: linear-gradient(
-    90deg,
-    #070707 45%,
-    #07070700 70%
-  );
+  --color-transparent: linear-gradient(90deg,#070707 45%,#07070700 70%);
 
-  font: var(--typo-body);
-  color: var(--color-text-primary);
-  background: var(--color-main);
   font-synthesis: none;
 }
 
@@ -64,16 +57,16 @@
 
 body {
   margin: 0;
+  background-image: var(--color-transparent), url('./assets/background.png');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
 
 .app {
   min-height: 100vh;
-  background: var(--color-main);
 }
 
 .header,
@@ -83,16 +76,16 @@ a {
   background: var(--color-main);
 }
 
-.header {
-  height: 80px;
-  padding: 0 32px;
-  border-bottom: 2px solid var(--color-light);
-}
-
 .logo-header,
 .logo-footer {
   display: inline-flex;
   align-items: center;
+}
+
+.header {
+  height: 80px;
+  padding: 0 32px;
+  border-bottom: 2px solid var(--color-light);
 }
 
 .logo-header img {
@@ -111,20 +104,28 @@ a {
   height: auto;
 }
 
-.login {
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.button-black {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--spacing-icon-label);
   margin-left: auto;
   padding: var(--spacing-component-padding);
+  color: var(--color-text-primary);
+  background: transparent;
   font: var(--typo-button);
   border: 1px solid var(--color-gold-primary);
   border-radius: 24px;
+  cursor: pointer;
 }
 
 h1 {
-  margin: 80px 0 0 50px;
+  margin: 80px 0 0 120px;
   color: var(--color-text-primary);
   font: var(--typo-display-xl);
   letter-spacing: 10px;
