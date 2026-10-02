@@ -1,3 +1,5 @@
+import app.models
+
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -5,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, get_engine
-import app.models
+from app.routes.films import router as films_router
 
 
 @asynccontextmanager
@@ -34,3 +36,6 @@ app.add_middleware(
 @app.get("/health")
 def health_check() -> dict[str, str]:
     return {"status": "ok"}
+
+
+app.include_router(films_router)
