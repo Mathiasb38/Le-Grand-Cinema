@@ -1,9 +1,21 @@
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.database import Base, get_engine
+import app.models
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+    Base.metadata.create_all(bind=get_engine())
+    yield
 
 app = FastAPI(
     title="Le-Grand-Cinema API",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
