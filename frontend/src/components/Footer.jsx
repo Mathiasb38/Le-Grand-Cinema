@@ -1,11 +1,12 @@
 import logo from '../assets/logo.png'
+import { Link } from 'react-router-dom'
 
 export default Footer
 
 function Footer() {
   return (
     <footer className="footer">
-      <a className="logo-footer" href="#accueil"><img src={logo} alt="Le Grand Cinéma" /></a>
+      <Link className="logo-footer" to="/"><img src={logo} alt="Le Grand Cinéma" /></Link>
     </footer>
   )
 }

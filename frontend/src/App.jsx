@@ -1,4 +1,6 @@
 import { ArrowRight } from 'lucide-react'
+import { Link, Route, Routes } from 'react-router-dom'
+
 import Footer from './components/Footer.jsx'
 import Header from './components/Header.jsx'
 
@@ -8,13 +10,17 @@ function App() {
   return (
     <div className="app">
       <Header />
-      <main className="home">
-        <h1>LE GRAND CINÉMA</h1>
-        <button className="button-gold" type="button">
-          Voir les films
-          <ArrowRight />
-        </button>
-      </main>
+      <Routes>
+        <Route path="/" element={
+          <main className="home">
+            <h1>LE GRAND CINÉMA</h1>
+            <Link className="button-gold" to="/films">
+              Voir les films
+              <ArrowRight />
+            </Link>
+          </main>
+        } />
+      </Routes>
       <Footer />
     </div>
   )
