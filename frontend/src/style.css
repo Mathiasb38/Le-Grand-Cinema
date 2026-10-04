@@ -1,0 +1,278 @@
+/* Fonts */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('./assets/cormorant-garamond-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('./assets/cormorant-garamond-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('./assets/manrope-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('./assets/manrope-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Global variables */
+:root {
+  --typo-display-xl: 400 70px/1.2 'Cormorant Garamond', serif;
+  --typo-display-l: 400 54px/1.2 'Cormorant Garamond', serif;
+  --typo-body: 400 18px/1.2 'Manrope', sans-serif;
+  --typo-body-small: 400 14px/1.2 'Manrope', sans-serif;
+  --typo-caption: 400 11px/1.2 'Manrope', sans-serif;
+  --typo-titre: 500 24px/1.2 'Cormorant Garamond', serif;
+  --typo-button: 500 15px/1 'Manrope', sans-serif;
+  
+  --spacing-icon-label: 8px;
+  --spacing-component-padding: 12px 16px;
+
+  --color-gold-primary: #e8bf75;
+  --color-text-primary: #f3f0ea;
+  --color-light: #f1cd8b;
+  --color-main: #141414;
+  --color-secondary: #b8b2a9;
+  --color-surface: #ffffff26;
+  --color-danger: #eb4b43;
+  --color-success: #29c783;
+  --color-muted: #817c74;
+  --color-transparent: linear-gradient(90deg,#070707 45%,#07070700 70%);
+  
+  font-synthesis: none;
+}
+
+/* Reset */
+* {
+  box-sizing: border-box;
+}
+
+/* Background */
+body {
+  margin: 0;
+
+  background-image: var(--color-transparent), url('./assets/background.png');
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  
+  font: var(--typo-body);
+  color: var(--color-text-primary);
+
+}
+
+
+/* Layout */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.app > main {
+  flex: 1;
+}
+/* --- Atomes --- */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.button-black,
+.button-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-icon-label);
+  
+  padding: var(--spacing-component-padding);
+  font: var(--typo-button);
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+.button-black {
+  color: var(--color-text-primary);
+  background: var(--color-main);
+  border: 1px solid var(--color-gold-primary);
+}
+
+.button-gold {
+
+  color: var(--color-main);
+  background: var(--color-gold-primary);
+  border: 0;
+}
+
+.button-gold svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.8;
+}
+
+.panel {
+  width: 90%;
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+/* --- Molecules --- */
+
+/* Film card */
+.film-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 260px;
+  padding: var(--spacing-component-padding);
+  background: var(--color-surface);
+  border-radius: 8px;
+  margin: var(--spacing-component-padding);
+}
+
+.film-card__poster {
+  display: block;
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  background: var(--color-main);
+}
+
+.film-card__title {
+
+  color: var(--color-text-primary);
+  font: var(--typo-titre);
+  text-align: center;
+}
+
+
+/* --- Organismes --- */
+
+/* Panel */
+.panel__list{
+  position: relative;
+}
+
+.panel__cards {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--spacing-component-padding);
+}
+
+
+.panel__arrow {
+  position: absolute;
+  top: 50%;
+  color: var(--color-light);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.panel__arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+.panel__arrow--left {
+  left: -48px;
+}
+
+.panel__arrow--right {
+  right: -48px;
+}
+
+
+/* Header */
+
+
+.header {
+  display: flex;
+  align-items: center;
+  background: var(--color-main);
+  height: 80px;
+  padding: 0 32px;
+  border-bottom: 2px solid var(--color-light);
+}
+
+.logo-header {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo-header img {
+  width: 350px;
+  height: auto;
+}
+
+#login-button {
+  margin-left: auto;
+}
+
+/* Footer */
+
+.footer {
+    
+  display: flex;
+  align-items: center;
+  background: var(--color-main);
+  min-height: 80px;
+  padding: 0 32px;
+  border-top: 2px solid var(--color-light);
+}
+.logo-footer {
+  display: inline-flex;
+  align-items: center;
+}
+.logo-footer img {
+  width: 250px;
+  height: auto;
+}
+
+
+/* --- Pages --- */
+
+/* Home */
+.home .button-gold {
+  margin: 80px 0 80px 120px;
+}
+
+.home h1 {
+  margin: 80px 0 0 120px;
+  color: var(--color-text-primary);
+  font: var(--typo-display-xl);
+  letter-spacing: 10px;
+  width: 450px;
+}
+
+
+
+/* Catalogue films */
+
+.catalog {
+  display: flex;
+  justify-content: center;
+  padding: 44px 16px 42px;
+}
+
+
+
+
+
+
