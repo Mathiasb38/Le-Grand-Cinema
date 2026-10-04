@@ -3,6 +3,7 @@ import { Link, Route, Routes } from 'react-router-dom'
 
 import Footer from './components/Footer.jsx'
 import Header from './components/Header.jsx'
+import FilmCatalog from './components/FilmCatalog.jsx'
 
 export default App
 
@@ -20,6 +21,7 @@ function App() {
             </Link>
           </main>
         } />
+        <Route path="/films" element={<FilmCatalog />} />
       </Routes>
       <Footer />
     </div>

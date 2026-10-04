@@ -85,8 +85,7 @@ body {
 .app > main {
   flex: 1;
 }
-
-/* Atomes */
+/* --- Atomes --- */
 a {
   color: inherit;
   text-decoration: none;
@@ -123,6 +122,82 @@ a {
   height: 24px;
   stroke-width: 1.8;
 }
+
+.panel {
+  width: 90%;
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+/* --- Molecules --- */
+
+/* Film card */
+.film-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 260px;
+  padding: var(--spacing-component-padding);
+  background: var(--color-surface);
+  border-radius: 8px;
+  margin: var(--spacing-component-padding);
+}
+
+.film-card__poster {
+  display: block;
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  background: var(--color-main);
+}
+
+.film-card__title {
+
+  color: var(--color-text-primary);
+  font: var(--typo-titre);
+  text-align: center;
+}
+
+
+/* --- Organismes --- */
+
+/* Panel */
+.panel__list{
+  position: relative;
+}
+
+.panel__cards {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--spacing-component-padding);
+}
+
+
+.panel__arrow {
+  position: absolute;
+  top: 50%;
+  color: var(--color-light);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.panel__arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+.panel__arrow--left {
+  left: -48px;
+}
+
+.panel__arrow--right {
+  right: -48px;
+}
+
 
 /* Header */
 
@@ -171,6 +246,8 @@ a {
 }
 
 
+/* --- Pages --- */
+
 /* Home */
 .home .button-gold {
   margin: 80px 0 80px 120px;
@@ -182,6 +259,16 @@ a {
   font: var(--typo-display-xl);
   letter-spacing: 10px;
   width: 450px;
+}
+
+
+
+/* Catalogue films */
+
+.catalog {
+  display: flex;
+  justify-content: center;
+  padding: 44px 16px 42px;
 }
 
 
