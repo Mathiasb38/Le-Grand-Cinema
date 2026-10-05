@@ -9,3 +9,13 @@ export async function getFilms() {
 
   return response.json()
 }
+
+export async function getFilmDetails(idFilm) {
+  const response = await fetch(`${API_URL}/films/${idFilm}`)
+
+  if (!response.ok) {
+    throw new Error(`Erreur HTTP ${response.status}`)
+  }
+
+  return response.json()
+}
