@@ -63,7 +63,12 @@ def film_data(db_session):
         duree_minutes=120,
         affiche_url="https://xxx.com/futur.jpg",
     )
-    db_session.add_all([salle, past_film, programmed_film])
+    far_film = Film(
+        titre="8 Days Later",
+        duree_minutes=120,
+        affiche_url="https://xxx.com/far.jpg",
+    )
+    db_session.add_all([salle, past_film, programmed_film, far_film])
     db_session.flush()
 
     now = datetime.now()
@@ -77,8 +82,21 @@ def film_data(db_session):
         id_film=programmed_film.id_film,
         id_salle=salle.id_salle,
     )
-    db_session.add_all([past_session, programmed_session])
+    far_session = Seance(
+        date_heure_debut=now + timedelta(days=8),
+        id_film=far_film.id_film,
+        id_salle=salle.id_salle,
+    )
+    db_session.add_all([past_session, programmed_session, far_session])
 
-    return db_session, past_film, programmed_film, past_session, programmed_session
+    return (
+        db_session,
+        past_film,
+        programmed_film,
+        far_film,
+        past_session,
+        programmed_session,
+        far_session,
+    )
 
 
