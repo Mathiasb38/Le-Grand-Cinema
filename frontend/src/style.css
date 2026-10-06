@@ -31,12 +31,13 @@
 :root {
   --typo-display-xl: 400 70px/1.2 'Cormorant Garamond', serif;
   --typo-display-l: 400 54px/1.2 'Cormorant Garamond', serif;
+  --typo-display-l-mobile: 400 42px/1.2 'Cormorant Garamond', serif;
   --typo-body: 400 18px/1.2 'Manrope', sans-serif;
   --typo-body-small: 400 14px/1.2 'Manrope', sans-serif;
   --typo-caption: 400 11px/1.2 'Manrope', sans-serif;
   --typo-titre: 500 24px/1.2 'Cormorant Garamond', serif;
   --typo-button: 500 15px/1 'Manrope', sans-serif;
-  
+
   --spacing-icon-label: 8px;
   --spacing-component-padding: 12px 16px;
 
@@ -49,8 +50,8 @@
   --color-danger: #eb4b43;
   --color-success: #29c783;
   --color-muted: #817c74;
-  --color-transparent: linear-gradient(90deg,#070707 45%,#07070700 70%);
-  
+  --color-transparent: linear-gradient(90deg, #070707 45%, #07070700 70%);
+
   font-synthesis: none;
 }
 
@@ -68,7 +69,7 @@ body {
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
-  
+
   font: var(--typo-body);
   color: var(--color-text-primary);
 
@@ -82,13 +83,36 @@ body {
   min-height: 100dvh;
 }
 
-.app > main {
+.app>main {
   flex: 1;
 }
-/* --- Atomes --- */
+
+/* --- éléments --- */
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.display-xl {
+  font: var(--typo-display-xl);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.display-l {
+  font: var(--typo-display-l);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.principal {
+  font: var(--typo-body);
+  color: var(--color-text-primary);
+}
+
+.muted {
+  color: var(--color-muted);
+  font: var(--typo-caption);
 }
 
 .button-black,
@@ -97,7 +121,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: var(--spacing-icon-label);
-  
+
   padding: var(--spacing-component-padding);
   font: var(--typo-button);
   border-radius: 24px;
@@ -123,14 +147,29 @@ a {
   stroke-width: 1.8;
 }
 
+.reserve-button {
+  position: absolute;
+  top: 34px;
+  right: 16px;
+  padding: 12px 16px;
+}
+
+.reserve-button svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 1.8;
+}
+
+
 .panel {
   width: 90%;
   border: 1px solid var(--color-gold-primary);
   border-radius: 8px;
   background: var(--color-surface);
+
 }
 
-/* --- Molecules --- */
+/* --- Groups --- */
 
 /* Film card */
 .film-card {
@@ -160,44 +199,46 @@ a {
 }
 
 
-/* --- Organismes --- */
-
-/* Panel */
-.panel__list{
-  position: relative;
-}
-
-.panel__cards {
+/* film info */
+.film-info__summary {
   display: flex;
-  overflow-x: auto;
-  scrollbar-width: none;
   padding: var(--spacing-component-padding);
 }
 
+.film-poster img {
+  display: block;
+  width: 240px;
+  height: 360px;
+}
 
-.panel__arrow {
+.film-info__info {
+  padding: var(--spacing-component-padding);
+}
+
+/* séances */ 
+
+
+.session-card {
+  display: flex;
+  flex-direction: column;
+  height: 116px;
+  min-width: 300px;
+  position: relative;
+  padding: var(--spacing-component-padding);
+  background: var(--color-surface);
+  border-radius: 8px;
+  margin: var(--spacing-component-padding);
+}
+
+
+.session-date {
   position: absolute;
-  top: 50%;
-  color: var(--color-light);
-  background: none;
-  border: 0;
-  cursor: pointer;
-  transform: translateY(-50%);
+  bottom: 10px;
+  left: 16px;
 }
 
-.panel__arrow svg {
-  width: 24px;
-  height: 24px;
-}
 
-.panel__arrow--left {
-  left: -48px;
-}
-
-.panel__arrow--right {
-  right: -48px;
-}
-
+/* --- sections --- */
 
 /* Header */
 
@@ -228,7 +269,7 @@ a {
 /* Footer */
 
 .footer {
-    
+
   display: flex;
   align-items: center;
   background: var(--color-main);
@@ -236,13 +277,53 @@ a {
   padding: 0 32px;
   border-top: 2px solid var(--color-light);
 }
+
 .logo-footer {
   display: inline-flex;
   align-items: center;
 }
+
 .logo-footer img {
   width: 250px;
   height: auto;
+}
+
+/* Panel */
+.panel__list {
+  position: relative;
+}
+
+.panel__cards {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: var(--spacing-component-padding);
+  width: 91%;
+  margin: 0 auto;
+}
+
+
+.panel__arrow {
+  position: absolute;
+  top: 50%;
+  color: var(--color-light);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.panel__arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+.panel__arrow--left {
+  left: 0;
+}
+
+.panel__arrow--right {
+  right: 0;
 }
 
 
@@ -253,26 +334,23 @@ a {
   margin: 80px 0 80px 120px;
 }
 
-.home h1 {
+.home .display-xl {
   margin: 80px 0 0 120px;
-  color: var(--color-text-primary);
-  font: var(--typo-display-xl);
   letter-spacing: 10px;
   width: 450px;
 }
-
-
 
 /* Catalogue films */
 
 .catalog {
   display: flex;
   justify-content: center;
-  padding: 44px 16px 42px;
+  padding: var(--spacing-component-padding);
 }
 
-
-
-
-
-
+/* detail film */
+.film-detail {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-component-padding);
+}

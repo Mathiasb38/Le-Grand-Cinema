@@ -1,9 +1,10 @@
 import { ArrowRight } from 'lucide-react'
 import { Link, Route, Routes } from 'react-router-dom'
 
-import Footer from './components/Footer.jsx'
-import Header from './components/Header.jsx'
-import FilmCatalog from './components/FilmCatalog.jsx'
+import Footer from './components/sections/Footer.jsx'
+import Header from './components/sections/Header.jsx'
+import FilmCatalog from './pages/FilmCatalog.jsx'
+import FilmDetail from './pages/FilmDetail.jsx'
 
 export default App
 
@@ -14,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={
           <main className="home">
-            <h1>LE GRAND CINÉMA</h1>
+            <h1 className="display-xl">LE GRAND CINÉMA</h1>
             <Link className="button-gold" to="/films">
               Voir les films
               <ArrowRight />
@@ -22,6 +23,7 @@ function App() {
           </main>
         } />
         <Route path="/films" element={<FilmCatalog />} />
+        <Route path="/films/:idFilm" element={<FilmDetail />} />
       </Routes>
       <Footer />
     </div>
