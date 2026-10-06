@@ -298,7 +298,8 @@ a {
   overflow-x: auto;
   scrollbar-width: none;
   padding: var(--spacing-component-padding);
-  width: 96%;
+  width: 91%;
+  margin: 0 auto;
 }
 
 
