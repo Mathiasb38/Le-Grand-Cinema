@@ -217,6 +217,16 @@ a {
 
 /* séances */ 
 
+.sessions__dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-icon-label);
+  padding: var(--spacing-component-padding);
+}
+
+.sessions__empty {
+  padding: var(--spacing-component-padding);
+}
 
 .session-card {
   display: flex;
