@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import FilmCard from '../components/groups/FilmCard.jsx'
 import { getFilms } from '../services/filmService.js'
+import { scrollCards } from '../utils/helpers.js'
 
 export default FilmCatalog
 
@@ -14,10 +15,6 @@ function FilmCatalog() {
       .then(setFilms)
   }, [])
 
-  function scrollCards(direction) {
-    cardsRef.current?.scrollBy({ left: direction * 304, behavior: 'smooth' })
-  }
-
   return (
     <main className="catalog">
       <section className="panel" aria-label="Catalogue des films">
@@ -27,7 +24,7 @@ function FilmCatalog() {
               className="panel__arrow panel__arrow--left"
               type="button"
               aria-label="Films précédents"
-              onClick={() => scrollCards(-1)}
+              onClick={() => scrollCards(cardsRef, -1, 304)}
             >
               <ChevronLeft aria-hidden="true" />
             </button>
@@ -38,7 +35,7 @@ function FilmCatalog() {
               className="panel__arrow panel__arrow--right"
               type="button"
               aria-label="Films suivants"
-              onClick={() => scrollCards(1)}
+              onClick={() => scrollCards(cardsRef, 1, 304)}
             >
               <ChevronRight aria-hidden="true" />
             </button>

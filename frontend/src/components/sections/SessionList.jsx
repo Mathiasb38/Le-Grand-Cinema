@@ -1,16 +1,25 @@
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef } from 'react'
+import { scrollCards } from '../../utils/helpers.js'
 
 export default SessionList
 
 function SessionList({ sessions }) {
+  const cardsRef = useRef(null)
+
   return (
     <div className="sessions">
 
       <div className="panel__list">
-        <button className="panel__arrow panel__arrow--left" type="button" aria-label="Séances précédentes">
+        <button
+          className="panel__arrow panel__arrow--left"
+          type="button"
+          aria-label="Séances précédentes"
+          onClick={() => scrollCards(cardsRef, -1, 332)}
+        >
           <ChevronLeft aria-hidden="true" />
         </button>
-        <div className="panel__cards">
+        <div className="panel__cards" ref={cardsRef}>
           {sessions.map((session) => {
             const date = new Date(session.date_heure_debut)
             const time = date.toLocaleTimeString('fr-FR', {
@@ -37,7 +46,12 @@ function SessionList({ sessions }) {
             )
           })}
         </div>
-        <button className="panel__arrow panel__arrow--right" type="button" aria-label="Séances suivantes">
+        <button
+          className="panel__arrow panel__arrow--right"
+          type="button"
+          aria-label="Séances suivantes"
+          onClick={() => scrollCards(cardsRef, 1, 332)}
+        >
           <ChevronRight aria-hidden="true" />
         </button>
       </div>
