@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
+
 export default FilmCard
 
-function FilmCard({ film, onViewSessions }) {
+function FilmCard({ film }) {
   return (
     <article className="film-card">
       <img
@@ -9,13 +11,12 @@ function FilmCard({ film, onViewSessions }) {
         alt={`Affiche du film ${film.titre}`}
       />
       <h2 className="film-card__title">{film.titre}</h2>
-      <button
+      <Link
         className="button-gold film-card__sessions"
-        type="button"
-        onClick={() => onViewSessions?.(film.id_film)}
+        to={`/films/${film.id_film}`}
       >
         Voir les séances
-      </button>
+      </Link>
     </article>
   )
 }

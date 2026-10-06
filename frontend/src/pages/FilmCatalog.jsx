@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import FilmCard from './FilmCard.jsx'
+import FilmCard from '../components/groups/FilmCard.jsx'
 import { getFilms } from '../services/filmService.js'
 
 export default FilmCatalog
@@ -12,7 +12,6 @@ function FilmCatalog() {
   useEffect(() => {
     getFilms()
       .then(setFilms)
-      .catch(() => setFilms([]))
   }, [])
 
   function scrollCards(direction) {

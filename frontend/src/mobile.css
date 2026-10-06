@@ -4,7 +4,15 @@
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
+
+  /* font-size */
+
+  .display-l {
+  font: var(--typo-display-l-mobile);
+  color: var(--color-text-primary);
+  margin: 0;
+}
 
   /* Layout */
   .app>main {
@@ -41,7 +49,7 @@
   }
 
   /* Home */
-  .home h1 {
+  .home .display-xl {
     margin: 80px 0 0;
     font: var(--typo-display-l);
     letter-spacing: .1em;
@@ -62,6 +70,10 @@
 
   /* Catalogue films */
 
+  .panel {
+    margin: var(--spacing-component-padding);
+  }
+
   .panel__cards {
     flex-direction: column;
     align-items: center;
@@ -71,5 +83,18 @@
     display: none;
   }
 
+  /* Film detail */
+
+  .film-info__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  .film-info__info {
+    width: 100%;
+    text-align: center;
+  }
 
 }
