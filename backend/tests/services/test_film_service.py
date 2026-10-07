@@ -11,10 +11,16 @@ def test_get_programmed_films(film_data) -> None:
 
 
 def test_get_film_details(film_data) -> None:
-    db_session, _, film, _, past_session, programmed_session, far_session = film_data
-    result_film, result_sessions = get_film_details(db_session, film.id_film)
+    db_session, _, film, _, past_seance, programmed_seance, far_seance = film_data
+    result = get_film_details(
+        db_session,
+        film.id_film,
+        programmed_seance.date_heure_debut.date(),
+    )
 
-    assert result_film == film
-    assert programmed_session in result_sessions
-    assert past_session not in result_sessions
-    assert far_session not in result_sessions
+    assert result.id_film == film.id_film
+    assert result.seances[0].id_seance == programmed_seance.id_seance
+    assert result.seances[0].places_disponibles == 7
+    result_ids = [seance.id_seance for seance in result.seances]
+    assert past_seance.id_seance not in result_ids
+    assert far_seance.id_seance not in result_ids
