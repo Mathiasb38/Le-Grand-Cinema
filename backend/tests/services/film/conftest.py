@@ -1,16 +1,8 @@
 from datetime import datetime, timedelta
 
 import pytest
-from sqlalchemy.orm import Session
 
-from app.database import get_engine
 from app.models import Billet, Film, Place, Reservation, Salle, Seance, Utilisateur
-
-
-@pytest.fixture
-def db_session():
-    with Session(get_engine()) as session:
-        yield session
 
 
 @pytest.fixture
