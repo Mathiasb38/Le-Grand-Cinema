@@ -115,6 +115,11 @@ a {
   font: var(--typo-caption);
 }
 
+.petit {
+  font: var(--typo-body-small);
+  color: var(--color-text-primary);
+}
+
 .button-black,
 .button-gold {
   display: inline-flex;
@@ -152,6 +157,11 @@ a {
   top: 34px;
   right: 16px;
   padding: 12px 16px;
+}
+
+.reserve-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .reserve-button svg {
@@ -241,7 +251,7 @@ a {
 }
 
 
-.session-date {
+.session-places {
   position: absolute;
   bottom: 10px;
   left: 16px;
@@ -252,6 +262,9 @@ a {
 
 /* Header */
 
+.mobile-nav {
+  display: none;
+}
 
 .header {
   display: flex;
@@ -270,6 +283,20 @@ a {
 .logo-header img {
   width: 350px;
   height: auto;
+}
+
+.header__nav {
+  margin-left: 32px;
+}
+
+.header__link {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: var(--spacing-component-padding);
+  border-left: 3px solid var(--color-gold-primary);
+  color: var(--color-gold-primary);
+  font: var(--typo-button);
 }
 
 #login-button {

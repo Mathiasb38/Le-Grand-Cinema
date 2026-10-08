@@ -1,24 +1,27 @@
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { getFilmSessions } from '../../services/filmService.js'
 import { scrollCards } from '../../utils/helpers.js'
 
 export default SessionList
 
-function SessionList({ sessions }) {
+function SessionList({ idFilm, sessions }) {
   const cardsRef = useRef(null)
   const today = getDateKey(new Date())
   const [selectedDate, setSelectedDate] = useState(today)
-  const dates = [
-    today,
-    ...new Set(
-      sessions
-        .map((session) => getDateKey(new Date(session.date_heure_debut)))
-        .filter((date) => date !== today),
-    ),
-  ]
-  const filteredSessions = sessions.filter(
-    (session) => getDateKey(new Date(session.date_heure_debut)) === selectedDate,
-  )
+  const [selectedSessions, setSelectedSessions] = useState(sessions)
+  const [isLoading, setIsLoading] = useState(false)
+  const dates = getNextDates()
+
+  function handleDateChange(date) {
+    setSelectedDate(date)
+    setSelectedSessions([])
+    setIsLoading(true)
+    getFilmSessions(idFilm, date)
+      .then(setSelectedSessions)
+      .catch(() => setSelectedSessions([]))
+      .finally(() => setIsLoading(false))
+  }
 
   return (
     <div className="sessions">
@@ -29,14 +32,18 @@ function SessionList({ sessions }) {
             type="button"
             aria-pressed={selectedDate === date}
             key={date}
-            onClick={() => setSelectedDate(date)}
+            onClick={() => handleDateChange(date)}
           >
-            {date === today ? "Aujourd'hui" : formatDate(date)}
+            {formatDate(date)}
           </button>
         ))}
       </div>
 
-      {filteredSessions.length === 0 ? (
+      {isLoading ? (
+        <p className="sessions__empty muted">
+          Chargement des séances...
+        </p>
+      ) : selectedSessions.length === 0 ? (
         <p className="sessions__empty muted">
           Aucune séance n'est programmée pour cette date.
         </p>
@@ -51,13 +58,13 @@ function SessionList({ sessions }) {
           <ChevronLeft aria-hidden="true" />
         </button>
         <div className="panel__cards" ref={cardsRef}>
-          {filteredSessions.map((session) => {
+          {selectedSessions.map((session) => {
             const date = new Date(session.date_heure_debut)
             const time = date.toLocaleTimeString('fr-FR', {
               hour: '2-digit',
               minute: '2-digit',
             })
-            const formattedDate = date.toLocaleDateString('fr-FR')
+            const isAvailable = session.places_disponibles > 0
 
             return (
               <article className="session-card" key={session.id_seance}>
@@ -65,13 +72,17 @@ function SessionList({ sessions }) {
                   {time}
                 </span>
                 <span className="muted">Salle {session.id_salle}</span>
-                <button className="button-gold reserve-button" type="button">
+                <button
+                  className="button-gold reserve-button"
+                  type="button"
+                  disabled={!isAvailable}
+                >
                   <CalendarDays aria-hidden="true" />
-                  <span>Réserver</span>
+                  <span>{isAvailable ? 'Réserver' : 'Complet'}</span>
                   <ArrowRight aria-hidden="true" />
                 </button>
-                <span className="principal session-date">
-                  {formattedDate}
+                <span className="petit session-places">
+                  {session.places_disponibles} places disponibles
                 </span>
               </article>
             )
@@ -93,6 +104,14 @@ function SessionList({ sessions }) {
 
 function getDateKey(date) {
   return date.toLocaleDateString('sv-SE')
+}
+
+function getNextDates() {
+  return Array.from({ length: 7 }, (_, index) => {
+    const date = new Date()
+    date.setDate(date.getDate() + index)
+    return getDateKey(date)
+  })
 }
 
 function formatDate(date) {

@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db, get_engine
 from app.main import app
-from app.models import Film, Salle, Seance
+from app.models import Billet, Film, Place, Reservation, Salle, Seance, Utilisateur
 
 
 load_dotenv()
@@ -20,16 +20,18 @@ os.environ["DATABASE_URL"] = os.environ["DATABASE_URL_TEST"]
 # Fixtures des routes
 @pytest.fixture
 def mock_routes(monkeypatch):
+    seance = SimpleNamespace(
+        id_seance=1,
+        date_heure_debut=datetime.now() + timedelta(days=1),
+        id_salle=1,
+        places_disponibles=10,
+    )
     film = SimpleNamespace(
         id_film=1,
         titre="Film test",
         duree_minutes=120,
         affiche_url="https://example.com/film.jpg",
-    )
-    seance = SimpleNamespace(
-        id_seance=1,
-        date_heure_debut=datetime.now() + timedelta(days=1),
-        id_salle=1,
+        seances=[seance],
     )
 
     monkeypatch.setattr(
@@ -38,7 +40,7 @@ def mock_routes(monkeypatch):
     )
     monkeypatch.setattr(
         "app.routes.films.get_film_details",
-        Mock(return_value=(film, [seance])),
+        Mock(return_value=film),
     )
     monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
 
@@ -71,32 +73,87 @@ def film_data(db_session):
     db_session.add_all([salle, past_film, programmed_film, far_film])
     db_session.flush()
 
+    places = [
+        Place(id_salle=salle.id_salle, rangee="A", numero=number)
+        for number in range(1, 6)
+    ]
+    user = Utilisateur(
+        email="test@example.com",
+        mot_de_passe_hash="hash",
+        role="client",
+    )
+    db_session.add_all([*places, user])
+    db_session.flush()
+
     now = datetime.now()
-    past_session = Seance(
+    past_seance = Seance(
         date_heure_debut=now - timedelta(days=1),
         id_film=past_film.id_film,
         id_salle=salle.id_salle,
     )
-    programmed_session = Seance(
-        date_heure_debut=now + timedelta(days=1),
+    programmed_seance = Seance(
+        date_heure_debut=now + timedelta(hours=1),
         id_film=programmed_film.id_film,
         id_salle=salle.id_salle,
     )
-    far_session = Seance(
+    far_seance = Seance(
         date_heure_debut=now + timedelta(days=8),
         id_film=far_film.id_film,
         id_salle=salle.id_salle,
     )
-    db_session.add_all([past_session, programmed_session, far_session])
+    db_session.add_all([past_seance, programmed_seance, far_seance])
+    db_session.flush()
+
+    db_session.add_all([
+        Billet(
+            code_billet="TEST-1",
+            date_emission=now,
+            id_place=places[0].id_place,
+            id_seance=programmed_seance.id_seance,
+        ),
+        Billet(
+            code_billet="TEST-2",
+            date_emission=now,
+            id_place=places[1].id_place,
+            id_seance=programmed_seance.id_seance,
+        ),
+        Reservation(
+            reference="RES-1",
+            date_reservation=now,
+            is_paid=False,
+            is_cancelled=False,
+            id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
+            id_place=places[2].id_place,
+        ),
+        Reservation(
+            reference="RES-2",
+            date_reservation=now,
+            is_paid=True,
+            is_cancelled=False,
+            id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
+            id_place=places[3].id_place,
+        ),
+        Reservation(
+            reference="RES-3",
+            date_reservation=now,
+            is_paid=False,
+            is_cancelled=True,
+            id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
+            id_place=places[4].id_place,
+        ),
+    ])
 
     return (
         db_session,
         past_film,
         programmed_film,
         far_film,
-        past_session,
-        programmed_session,
-        far_session,
+        past_seance,
+        programmed_seance,
+        far_seance,
     )
 
 

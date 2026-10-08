@@ -19,3 +19,13 @@ export async function getFilmDetails(idFilm) {
 
   return response.json()
 }
+
+export async function getFilmSessions(idFilm, date) {
+  const response = await fetch(`${API_URL}/films/${idFilm}/seances?date=${date}`)
+
+  if (!response.ok) {
+    throw new Error(`Erreur HTTP ${response.status}`)
+  }
+
+  return response.json()
+}

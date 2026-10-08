@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import FilmInfo from '../components/groups/FilmInfo.jsx'
+import FilmInfo from '../components/sections/FilmInfo.jsx'
 import { getFilmDetails } from '../services/filmService.js'
 
 export default FilmDetail
