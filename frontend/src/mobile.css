@@ -48,6 +48,21 @@
     stroke-width: 1.8;
   }
 
+  .mobile-nav {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    height: calc(100dvh - 80px);
+    padding-top: 32px;
+    background: var(--color-main);
+  }
+
   .logo-header img {
     width: 250px;
   }

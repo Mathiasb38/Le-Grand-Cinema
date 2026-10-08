@@ -262,6 +262,9 @@ a {
 
 /* Header */
 
+.mobile-nav {
+  display: none;
+}
 
 .header {
   display: flex;
