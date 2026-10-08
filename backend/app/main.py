@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, get_engine
 from app.routes.films import router as films_router
+from app.routes.auth import router as auth_router
 
 
 @asynccontextmanager
@@ -39,3 +40,4 @@ def health_check() -> dict[str, str]:
 
 
 app.include_router(films_router)
+app.include_router(auth_router)

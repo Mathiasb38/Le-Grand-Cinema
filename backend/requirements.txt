@@ -5,3 +5,5 @@ psycopg[binary]
 python-dotenv
 pytest
 uvicorn[standard]
+bcrypt
+email-validator

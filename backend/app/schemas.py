@@ -1,6 +1,7 @@
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
 
 
 class FilmResponse(BaseModel):
@@ -23,3 +24,16 @@ class SeanceResponse(BaseModel):
 
 class FilmDetailsResponse(FilmResponse):
     seances: list[SeanceResponse]
+
+
+class UtilisateurCreate(BaseModel):
+    email: EmailStr
+    mot_de_passe: str = Field(min_length=12)
+
+
+class UtilisateurResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id_utilisateur: int
+    email: EmailStr
+    role: str
