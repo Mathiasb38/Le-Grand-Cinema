@@ -9,7 +9,7 @@ from app.main import app
 
 
 @pytest.fixture
-def mock_routes(monkeypatch):
+def mock_film_routes(monkeypatch):
     seance = SimpleNamespace(
         id_seance=1,
         date_heure_debut=datetime.now() + timedelta(days=1),
@@ -33,4 +33,19 @@ def mock_routes(monkeypatch):
         Mock(return_value=film),
     )
     monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+
+@pytest.fixture
+def mock_auth_route(monkeypatch):
+    user = SimpleNamespace(
+        id_utilisateur=1,
+        email="client@example.com",
+        role="client",
+    )
+    create_user = Mock(return_value=user)
+
+    monkeypatch.setattr("app.routes.auth.create_user", create_user)
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return create_user
 
