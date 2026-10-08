@@ -22,6 +22,10 @@
   }
 
   /* Header */
+  .header__nav {
+    display: none;
+  }
+
   #login-button {
     display: none;
   }

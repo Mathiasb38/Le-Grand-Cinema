@@ -282,6 +282,20 @@ a {
   height: auto;
 }
 
+.header__nav {
+  margin-left: 32px;
+}
+
+.header__link {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: var(--spacing-component-padding);
+  border-left: 3px solid var(--color-gold-primary);
+  color: var(--color-gold-primary);
+  font: var(--typo-button);
+}
+
 #login-button {
   margin-left: auto;
 }

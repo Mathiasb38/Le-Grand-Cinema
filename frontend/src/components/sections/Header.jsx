@@ -10,6 +10,9 @@ function Header() {
       <Link className="logo-header" to="/" aria-label="Le Grand Cinéma">
         <img src={logo} alt="Le Grand Cinéma" />
       </Link>
+      <nav className="header__nav" aria-label="Navigation principale">
+        <Link className="header__link" to="/films">Films</Link>
+      </nav>
       <button className="button-black" id="login-button" type="button">Connexion</button>
       <button className="mobile-menu" type="button" aria-label="Ouvrir le menu">
         <AlignJustify />
