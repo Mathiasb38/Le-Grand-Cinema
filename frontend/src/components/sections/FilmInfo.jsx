@@ -1,4 +1,4 @@
-import SessionList from '../sections/SessionList.jsx'
+import SessionList from '../groups/SessionList.jsx'
 
 export default FilmInfo
 
@@ -16,7 +16,11 @@ function FilmInfo({ film }) {
         </div>
       </div>
 
-      <SessionList sessions={film.seances} />
+      <SessionList
+        key={film.id_film}
+        idFilm={film.id_film}
+        sessions={film.seances}
+      />
     </section>
   )
 }
