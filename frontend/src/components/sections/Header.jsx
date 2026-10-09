@@ -17,7 +17,7 @@ function Header() {
       <nav className="header__nav" aria-label="Navigation principale">
         <Link className="header__link" to="/films">Films</Link>
       </nav>
-      <button className="button-black" id="login-button" type="button">Connexion</button>
+      <Link className="button-black" id="login-button" to="/connexion">Connexion</Link>
       <button
         className="mobile-menu"
         type="button"

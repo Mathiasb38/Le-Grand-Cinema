@@ -12,9 +12,9 @@ function MobileMenu({ onClose }) {
       >
         Films
       </Link>
-      <button className="button-black" type="button">
+      <Link className="button-black" to="/connexion" onClick={onClose}>
         Connexion
-      </button>
+      </Link>
     </nav>
   )
 }
