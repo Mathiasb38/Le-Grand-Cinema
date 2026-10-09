@@ -142,4 +142,12 @@
     flex: 0;
   }
 
+  .modal {
+    width: min(480px, 100%);
+  }
+
+  .modal__actions {
+    gap: 24px;
+  }
+
 }

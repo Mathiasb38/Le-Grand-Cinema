@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import AuthPanel from '../components/groups/AuthPanel.jsx'
-import Modal from '../components/organisms/Modal.jsx'
+import Modal from '../components/sections/Modal.jsx'
 import { registerUser } from '../services/authService.js'
 
 export default Register

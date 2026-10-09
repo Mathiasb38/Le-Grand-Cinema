@@ -126,6 +126,12 @@ a {
   text-decoration: underline;
 }
 
+.titre {
+  font: var(--typo-titre);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
 .hero .display-xl {
   margin: 80px 0 0 120px;
   letter-spacing: 10px;
@@ -374,6 +380,58 @@ a {
 .panel__arrow--right {
   right: 0;
 }
+
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-component-padding);
+  background: #000000a1;
+}
+
+.modal {
+  position: relative;
+  width: 480px;
+  min-height: 280px;
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 16px;
+  background: var(--color-main);
+}
+
+.modal__close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  padding: 0;
+  color: var(--color-gold-primary);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 90px;
+}
+
+.modal__actions .button-gold,
+.modal__actions .button-black {
+  width: 200px;
+  height: 48px;
+}
+
+.modal--validation .modal__actions .button-gold,
+.modal--validation .modal__actions .button-black {
+  width: 120px;
+}
+
 
 
 /* --- Pages --- */
