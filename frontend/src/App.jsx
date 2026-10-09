@@ -5,6 +5,8 @@ import Footer from './components/sections/Footer.jsx'
 import Header from './components/sections/Header.jsx'
 import FilmCatalog from './pages/FilmCatalog.jsx'
 import FilmDetail from './pages/FilmDetail.jsx'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx'
 
 export default App
 
@@ -14,7 +16,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={
-          <main className="home">
+          <main className="home hero">
             <h1 className="display-xl">LE GRAND CINÉMA</h1>
             <Link className="button-gold" to="/films">
               Voir les films
@@ -24,6 +26,8 @@ function App() {
         } />
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
+        <Route path="/connexion" element={<Login />} />
+        <Route path="/inscription" element={<Register />} />
       </Routes>
       <Footer />
     </div>
