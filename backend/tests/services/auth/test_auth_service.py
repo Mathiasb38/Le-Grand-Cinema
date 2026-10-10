@@ -3,6 +3,7 @@ import jwt
 import pytest
 from fastapi import HTTPException
 from datetime import datetime, timedelta, timezone
+from types import SimpleNamespace
 
 from app.schemas import UtilisateurLogin
 from app.services.auth_service import (
@@ -10,6 +11,7 @@ from app.services.auth_service import (
     create_access_token,
     create_user,
     decode_access_token,
+    require_admin,
 )
 
 
@@ -87,3 +89,15 @@ def test_decode_access_token_rejects_expired_token(monkeypatch) -> None:
     )
 
     assert decode_access_token(token) is None
+
+
+def test_require_admin() -> None:
+    admin = SimpleNamespace(role="admin")
+    client = SimpleNamespace(role="client")
+
+    assert require_admin(admin) is admin
+
+    with pytest.raises(HTTPException) as error:
+        require_admin(client)
+
+    assert error.value.status_code == 403
