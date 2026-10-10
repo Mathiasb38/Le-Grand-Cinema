@@ -15,6 +15,7 @@ function Register() {
     try {
       await registerUser(email, password)
       clearForm()
+
       setModal({ type: 'confirmation', message: 'Votre compte a été créé.' })
     } catch (error) {
       setModal({ type: 'error', message: error.message })
@@ -24,10 +25,7 @@ function Register() {
   return (
     <main className="auth-page">
       <section className="auth-page__hero hero">
-        <h1 className="display-xl">
-          CRÉER UN<br />
-          COMPTE
-        </h1>
+        <h1 className="display-xl">CRÉER UN<br />COMPTE</h1>
       </section>
 
       <AuthPanel

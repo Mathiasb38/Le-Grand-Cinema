@@ -44,3 +44,33 @@ def test_duplicate_email(mock_auth_route) -> None:
     )
 
     assert response.status_code == 409
+
+
+def test_login_user(mock_login_route) -> None:
+    response = TestClient(app).post(
+        "/auth/login",
+        json={
+            "email": "client@example.com",
+            "mot_de_passe": "motdepasse123",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "access_token": "token-test",
+        "token_type": "bearer",
+    }
+
+
+def test_login_with_invalid_credentials(mock_login_route) -> None:
+    mock_login_route.return_value = None
+
+    response = TestClient(app).post(
+        "/auth/login",
+        json={
+            "email": "client@example.com",
+            "mot_de_passe": "motdepasse123",
+        },
+    )
+
+    assert response.status_code == 401

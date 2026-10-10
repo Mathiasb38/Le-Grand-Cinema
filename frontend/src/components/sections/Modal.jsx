@@ -11,6 +11,10 @@ const modalTypes = {
 function Modal({ type, message, onClose, onConfirm, onCancel }) {
   const content = modalTypes[type]
   const isValidation = type === 'validation'
+  const details = message?.detail ?? message
+  const displayedMessage = Array.isArray(details)
+    ? details.map((detail) => detail.msg || detail.message || detail).join(', ')
+    : message?.message || details
 
   return (
     <div className="modal-overlay">
@@ -24,7 +28,7 @@ function Modal({ type, message, onClose, onConfirm, onCancel }) {
           <X aria-hidden="true" />
         </button>
         <h2 className="titre" id="modal-title">{content.title}</h2>
-        <p className="petit">{message}</p>
+        <p className="petit">{displayedMessage}</p>
         <div className="modal__actions">
           {isValidation ? (
             <>

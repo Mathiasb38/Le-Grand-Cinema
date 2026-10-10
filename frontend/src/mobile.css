@@ -48,6 +48,10 @@
     display: none;
   }
 
+  .user-icon {
+    display: none;
+  }
+
   .mobile-menu {
     display: inline-flex;
     align-items: center;

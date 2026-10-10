@@ -49,3 +49,19 @@ def mock_auth_route(monkeypatch):
 
     return create_user
 
+
+@pytest.fixture
+def mock_login_route(monkeypatch):
+    user = SimpleNamespace(
+        id_utilisateur=1,
+        email="client@example.com",
+        role="client",
+    )
+    authenticate_user = Mock(return_value=user)
+
+    monkeypatch.setattr("app.routes.auth.authenticate_user", authenticate_user)
+    monkeypatch.setattr("app.routes.auth.create_access_token", Mock(return_value="token-test"))
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return authenticate_user
+
