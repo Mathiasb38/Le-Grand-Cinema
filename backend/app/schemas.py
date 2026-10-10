@@ -31,9 +31,19 @@ class UtilisateurCreate(BaseModel):
     mot_de_passe: str = Field(min_length=12)
 
 
+class UtilisateurLogin(BaseModel):
+    email: EmailStr
+    mot_de_passe: str
+
+
 class UtilisateurResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id_utilisateur: int
     email: EmailStr
     role: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
