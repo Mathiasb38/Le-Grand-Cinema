@@ -1,13 +1,15 @@
-import { AlignJustify, X } from 'lucide-react'
+import { AlignJustify, User, X } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../assets/logo.png'
+import { useAuth } from '../../context/AuthContext.jsx'
 import MobileMenu from './MobileMenu.jsx'
 
 export default Header
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { isAuthenticated } = useAuth()
 
   return (
     <header className="header">
@@ -17,7 +19,13 @@ function Header() {
       <nav className="header__nav" aria-label="Navigation principale">
         <Link className="header__link" to="/films">Films</Link>
       </nav>
-      <Link className="button-black" id="login-button" to="/connexion">Connexion</Link>
+      {isAuthenticated ? (
+        <span className="user-icon" role="img" aria-label="Compte utilisateur">
+          <User aria-hidden="true" />
+        </span>
+      ) : (
+        <Link className="button-black" id="login-button" to="/connexion">Connexion</Link>
+      )}
       <button
         className="mobile-menu"
         type="button"

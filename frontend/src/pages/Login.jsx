@@ -2,19 +2,19 @@ import { useState } from 'react'
 
 import AuthPanel from '../components/groups/AuthPanel.jsx'
 import Modal from '../components/sections/Modal.jsx'
-import { loginUser } from '../services/authService.js'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export default Login
 
 function Login() {
   const [modal, setModal] = useState(null)
+  const { login } = useAuth()
 
   async function handleSubmit({ email, password, clearForm }) {
     setModal(null)
 
     try {
-      const { access_token: accessToken } = await loginUser(email, password)
-      localStorage.setItem('access_token', accessToken)
+      await login(email, password)
       clearForm()
       setModal({ type: 'confirmation', message: 'Connexion réussie.' })
     } catch (error) {

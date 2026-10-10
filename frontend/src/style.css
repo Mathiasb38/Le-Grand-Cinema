@@ -312,13 +312,24 @@ a {
   align-items: center;
   height: 40px;
   padding: var(--spacing-component-padding);
-  border-left: 3px solid var(--color-gold-primary);
   color: var(--color-gold-primary);
   font: var(--typo-button);
 }
 
 #login-button {
   margin-left: auto;
+}
+
+.user-icon {
+  display: inline-flex;
+  margin-left: auto;
+  color: var(--color-text-primary);
+}
+
+.user-icon svg {
+  width: 30px;
+  height: 30px;
+  stroke-width: 1.8;
 }
 
 /* Footer */
