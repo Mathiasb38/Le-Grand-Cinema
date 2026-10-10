@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from fastapi import HTTPException
 
 from app.main import app
 
@@ -61,16 +62,18 @@ def test_login_user(mock_login_route) -> None:
         "token_type": "bearer",
     }
 
-
-def test_login_with_invalid_credentials(mock_login_route) -> None:
-    mock_login_route.return_value = None
-
+def test_admin_login_user(mock_login_route) -> None:
     response = TestClient(app).post(
-        "/auth/login",
+        "/auth/admin/login",
         json={
-            "email": "client@example.com",
+            "email": "admin@example.com",
             "mot_de_passe": "motdepasse123",
         },
     )
 
-    assert response.status_code == 401
+    assert response.status_code == 200
+    assert response.json() == {
+        "access_token": "token-test",
+        "token_type": "bearer",
+    }
+
