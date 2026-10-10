@@ -8,6 +8,7 @@ import FilmDetail from './pages/FilmDetail.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Reservation from './pages/Reservation.jsx'
 
 export default App
 
@@ -27,6 +28,7 @@ function App() {
         } />
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
+        <Route path="/reservation/:idSeance" element={<Reservation />} />
         <Route path="/connexion" element={<Login />} />
         <Route path="/admin/connexion" element={<AdminLogin />} />
         <Route path="/inscription" element={<Register />} />

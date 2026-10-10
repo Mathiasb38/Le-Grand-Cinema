@@ -1,5 +1,7 @@
 import { ArrowRight, CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
+import { useAuth } from '../../context/AuthContext.jsx'
 import { getFilmSessions } from '../../services/filmService.js'
 import { scrollCards } from '../../utils/helpers.js'
 
@@ -7,6 +9,8 @@ export default SessionList
 
 function SessionList({ idFilm, sessions }) {
   const cardsRef = useRef(null)
+  const navigate = useNavigate()
+  const { isAuthenticated } = useAuth()
   const today = getDateKey(new Date())
   const [selectedDate, setSelectedDate] = useState(today)
   const [selectedSessions, setSelectedSessions] = useState(sessions)
@@ -21,6 +25,15 @@ function SessionList({ idFilm, sessions }) {
       .then(setSelectedSessions)
       .catch(() => setSelectedSessions([]))
       .finally(() => setIsLoading(false))
+  }
+
+  function handleReservation(session) {
+    if (!isAuthenticated) {
+      navigate('/connexion')
+      return
+    }
+
+    navigate(`/reservation/${session.id_seance}`, { state: session })
   }
 
   return (
@@ -76,6 +89,7 @@ function SessionList({ idFilm, sessions }) {
                   className="button-gold reserve-button"
                   type="button"
                   disabled={!isAvailable}
+                  onClick={() => handleReservation(session)}
                 >
                   <CalendarDays aria-hidden="true" />
                   <span>{isAvailable ? 'Réserver' : 'Complet'}</span>
