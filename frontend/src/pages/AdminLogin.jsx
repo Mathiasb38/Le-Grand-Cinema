@@ -16,7 +16,6 @@ function AdminLogin() {
     try {
       await adminLogin(email, password)
       clearForm()
-      setModal({ type: 'confirmation', message: 'Connexion réussie.' })
     } catch (error) {
       setModal({ type: 'error', message: error.message })
     }
