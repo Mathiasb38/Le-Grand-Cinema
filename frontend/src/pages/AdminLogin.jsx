@@ -4,17 +4,17 @@ import AuthPanel from '../components/groups/AuthPanel.jsx'
 import Modal from '../components/sections/Modal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
-export default Login
+export default AdminLogin
 
-function Login() {
+function AdminLogin() {
   const [modal, setModal] = useState(null)
-  const { login } = useAuth()
+  const { adminLogin } = useAuth()
 
   async function handleSubmit({ email, password, clearForm }) {
     setModal(null)
 
     try {
-      await login(email, password)
+      await adminLogin(email, password)
       clearForm()
     } catch (error) {
       setModal({ type: 'error', message: error.message })
@@ -24,13 +24,11 @@ function Login() {
   return (
     <main className="auth-page">
       <section className="auth-page__hero hero">
-        <h1 className="display-xl">CONNEXION</h1>
+        <h1 className="display-xl">BACK-OFFICE</h1>
       </section>
 
       <AuthPanel
-        ariaLabel="Connexion"
-        linkLabel="Créer un compte"
-        linkTo="/inscription"
+        ariaLabel="Connexion back-office"
         onSubmit={handleSubmit}
         submitLabel="Connexion"
       />

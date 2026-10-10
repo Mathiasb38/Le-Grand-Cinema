@@ -5,6 +5,7 @@ import Footer from './components/sections/Footer.jsx'
 import Header from './components/sections/Header.jsx'
 import FilmCatalog from './pages/FilmCatalog.jsx'
 import FilmDetail from './pages/FilmDetail.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
         <Route path="/connexion" element={<Login />} />
+        <Route path="/admin/connexion" element={<AdminLogin />} />
         <Route path="/inscription" element={<Register />} />
       </Routes>
       <Footer />

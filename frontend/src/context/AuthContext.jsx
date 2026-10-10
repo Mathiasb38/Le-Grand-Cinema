@@ -1,13 +1,13 @@
 import { createContext, useContext, useState } from 'react'
-import { loginUser } from '../services/authService.js'
+import { loginAdminUser, loginUser } from '../services/authService.js'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('access_token'))
 
-  async function login(email, password) {
-    const { access_token: accessToken } = await loginUser(email, password)
+  async function saveToken(loginRequest) {
+    const { access_token: accessToken } = await loginRequest
     localStorage.setItem('access_token', accessToken)
     setToken(accessToken)
   }
@@ -21,7 +21,8 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider value={{
       token,
       isAuthenticated: Boolean(token),
-      login,
+      login: (email, password) => saveToken(loginUser(email, password)),
+      adminLogin: (email, password) => saveToken(loginAdminUser(email, password)),
       logout,
     }}>
       {children}
