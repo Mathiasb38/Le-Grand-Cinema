@@ -20,9 +20,9 @@ function Header() {
         <Link className="header__link" to="/films">Films</Link>
       </nav>
       {isAuthenticated ? (
-        <span className="user-icon" role="img" aria-label="Compte utilisateur">
+        <Link className="user-icon" to="/compte" aria-label="Mon compte">
           <User aria-hidden="true" />
-        </span>
+        </Link>
       ) : (
         <Link className="button-black" id="login-button" to="/connexion">Connexion</Link>
       )}
