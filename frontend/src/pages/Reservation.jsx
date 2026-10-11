@@ -57,7 +57,9 @@ function Reservation() {
               minute: '2-digit',
             })}
           </p>
-          <p className="muted">Salle {session.id_salle}</p>
+          <p className="muted">
+            {session.nom_salle} - Salle {session.numero_salle}
+          </p>
         </div>
 
         <form className="reservation-form" onSubmit={handleSubmit}>

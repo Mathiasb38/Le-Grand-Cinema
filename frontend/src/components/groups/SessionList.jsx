@@ -84,7 +84,10 @@ function SessionList({ idFilm, sessions }) {
                 <span className="principal">
                   {time}
                 </span>
-                <span className="muted">Salle {session.id_salle}</span>
+                <span className="muted">
+                  {session.nom_salle ? `${session.nom_salle} - ` : ''}
+                  Salle {session.numero_salle}
+                </span>
                 <button
                   className="button-gold reserve-button"
                   type="button"
