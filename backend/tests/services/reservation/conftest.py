@@ -7,7 +7,7 @@ from app.models import Film, Place, Reservation, Salle, Seance, Utilisateur
 
 @pytest.fixture
 def reservation_data(db_session):
-    salle = Salle(numero=777, nom="test", capacite_max=100)
+    salle = Salle(numero=666, nom="test", capacite_max=100)
     film = Film(
         titre="Film test",
         duree_minutes=120,
