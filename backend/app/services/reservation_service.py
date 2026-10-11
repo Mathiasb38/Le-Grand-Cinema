@@ -5,8 +5,8 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Billet, Place, Reservation, Seance, Utilisateur
-from app.schemas import ReservationCreate
+from app.models import Billet, Place, Reservation, Seance, Utilisateur, Film
+from app.schemas import ReservationCreate, ReservationDetailsResponse
 
 
 def create_reservation(
@@ -58,3 +58,33 @@ def create_reservation(
     session.commit()
 
     return reservations
+
+
+def get_user_reservations(
+    session: Session,
+    user: Utilisateur,
+) -> list[ReservationDetailsResponse]:
+    statement = (
+        select(
+            Reservation.reference,
+            Film.titre,
+            Seance.date_heure_debut,
+        )
+        .join(Seance, Reservation.id_seance == Seance.id_seance)
+        .join(Film, Seance.id_film == Film.id_film)
+        .where(
+            Reservation.id_utilisateur == user.id_utilisateur,
+            Reservation.is_paid.is_(False),
+            Reservation.is_cancelled.is_(False),
+        )
+        .order_by(Seance.date_heure_debut)
+    )
+
+    return [
+        ReservationDetailsResponse(
+            reference=reference,
+            titre_film=titre,
+            date_heure_debut=date_heure_debut,
+        )
+        for reference, titre, date_heure_debut in session.execute(statement)
+    ]

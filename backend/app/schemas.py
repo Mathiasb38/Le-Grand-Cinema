@@ -63,3 +63,9 @@ class ReservationResponse(BaseModel):
     date_reservation: datetime
     id_seance: int
     id_place: int
+
+
+class ReservationDetailsResponse(BaseModel):
+    reference: str
+    titre_film: str
+    date_heure_debut: datetime
