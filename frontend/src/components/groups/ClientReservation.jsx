@@ -29,6 +29,9 @@ function ClientReservation({ reservation }) {
             minute: '2-digit',
           })}
         </time>
+        <span className="client-reservation__room secondaire">
+          {reservation.nom_salle} - Salle {reservation.numero_salle}
+        </span>
       </div>
 
     </li>
