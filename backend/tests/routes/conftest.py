@@ -101,6 +101,8 @@ def mock_reservation_list_route(monkeypatch):
             reference="RES-TEST",
             titre_film="Film test",
             date_heure_debut=datetime(2027, 1, 1, 20, 30),
+            nom_salle="test",
+            numero_salle=666,
         )
     ]
     get_user_reservations = Mock(return_value=reservations)

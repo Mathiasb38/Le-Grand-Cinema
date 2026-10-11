@@ -49,3 +49,5 @@ def test_get_user_reservations(reservations_data):
     assert [item.reference for item in result] == ["RES-CLIENT"]
     assert result[0].titre_film == "Film test"
     assert result[0].date_heure_debut == seance.date_heure_debut
+    assert result[0].nom_salle == "test"
+    assert result[0].numero_salle == 666
