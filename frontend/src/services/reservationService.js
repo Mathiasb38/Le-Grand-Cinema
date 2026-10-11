@@ -13,6 +13,14 @@ export async function createReservation(idSeance, nombrePlaces, token) {
     }),
   })
 
+  if (response.status === 401) {
+    localStorage.removeItem('access_token')
+    window.location.href = window.location.pathname.startsWith('/admin')
+      ? '/admin/connexion'
+      : '/connexion'
+    throw new Error('Session expirée')
+  }
+
   const data = await response.json()
 
   if (!response.ok) {
