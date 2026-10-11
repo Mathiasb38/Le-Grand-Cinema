@@ -33,7 +33,7 @@ function SessionList({ idFilm, sessions }) {
       return
     }
 
-    navigate(`/reservation/${session.id_seance}`, { state: session })
+    navigate(`/reservation/${session.id_seance}`, {state: { ...session, idFilm }})
   }
 
   return (

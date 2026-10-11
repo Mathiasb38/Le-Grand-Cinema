@@ -1,6 +1,6 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams,Link } from 'react-router-dom'
 
 import Modal from '../components/sections/Modal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -82,6 +82,10 @@ function Reservation() {
             {isLoading ? 'Validation...' : 'Valider la réservation'}
             <ArrowRight aria-hidden="true" />
           </button>
+          <Link className="button-black" to={`/films/${session.idFilm}`}>
+            <ArrowLeft aria-hidden="true" />
+            Retour
+          </Link>
         </form>
       </section>
       {modal && <Modal {...modal} onClose={() => setModal(null)} />}
