@@ -2,7 +2,7 @@ import { CalendarDays } from 'lucide-react'
 
 export default ClientReservation
 
-function ClientReservation({ reservation }) {
+function ClientReservation({ reservation, onCancel }) {
   const date = new Date(reservation.date_heure_debut)
 
   return (
@@ -33,7 +33,15 @@ function ClientReservation({ reservation }) {
           {reservation.nom_salle} - Salle {reservation.numero_salle}
         </span>
       </div>
-
+      {onCancel && (
+        <button
+          className="button-danger client-reservation__cancel"
+          type="button"
+          onClick={() => onCancel(reservation.reference)}
+        >
+          Annuler
+        </button>
+      )}
     </li>
   )
 }
