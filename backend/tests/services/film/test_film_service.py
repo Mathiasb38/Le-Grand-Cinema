@@ -20,6 +20,8 @@ def test_get_film_details(film_data) -> None:
 
     assert result.id_film == film.id_film
     assert result.seances[0].id_seance == programmed_seance.id_seance
+    assert result.seances[0].nom_salle == "test"
+    assert result.seances[0].numero_salle == 666
     assert result.seances[0].places_disponibles == 7
     result_ids = [seance.id_seance for seance in result.seances]
     assert past_seance.id_seance not in result_ids

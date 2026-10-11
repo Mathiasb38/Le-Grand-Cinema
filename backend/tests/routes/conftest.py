@@ -15,6 +15,8 @@ def mock_film_routes(monkeypatch):
         id_seance=1,
         date_heure_debut=datetime.now() + timedelta(days=1),
         id_salle=1,
+        nom_salle="Salle principale",
+        numero_salle=1,
         places_disponibles=10,
     )
     film = SimpleNamespace(
