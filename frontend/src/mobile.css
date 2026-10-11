@@ -160,4 +160,10 @@
     gap: 24px;
   }
 
+  /* Client panel */
+  .client-reservation {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
 }

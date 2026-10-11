@@ -132,6 +132,11 @@ a {
   margin: 0;
 }
 
+.secondaire {
+  font: var(--typo-body-small);
+  color: var(--color-secondary);
+}
+
 .hero .display-xl {
   margin: 80px 0 0 120px;
   letter-spacing: 10px;
@@ -455,26 +460,18 @@ a {
 
 /* Catalogue films */
 
-.catalog {
+.catalog,
+.film-detail,
+.reservation-page,
+.client-account-page {
   display: flex;
   justify-content: center;
   padding: var(--spacing-component-padding);
 }
 
 /* detail film */
-.film-detail {
-  display: flex;
-  justify-content: center;
-  padding: var(--spacing-component-padding);
-}
 
 /* Reservation */
-.reservation-page {
-  display: flex;
-  justify-content: center;
-  padding: var(--spacing-component-padding);
-}
-
 .reservation-panel {
   width: min(640px, 70%);
   padding: var(--spacing-component-padding);
@@ -572,3 +569,40 @@ a {
 .auth-form .lien {
   align-self: center;
 }
+
+/* Espace client */
+.client-account {
+  display: flex;
+  padding: var(--spacing-component-padding);
+}
+
+.client-reservations {
+  flex: 1;
+}
+
+.client-reservations__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+}
+
+.client-reservation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.client-reservation__details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.client-reservation__details svg {
+  color: var(--color-gold-primary);
+}
+
