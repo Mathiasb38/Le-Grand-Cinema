@@ -69,3 +69,5 @@ class ReservationDetailsResponse(BaseModel):
     reference: str
     titre_film: str
     date_heure_debut: datetime
+    nom_salle: str
+    numero_salle: int
