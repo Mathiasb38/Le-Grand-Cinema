@@ -91,6 +91,37 @@ def get_user_reservations(
             nom_salle=nom_salle,
             numero_salle=numero_salle,
         )
-        for reference, titre, date_heure_debut, nom_salle, numero_salle
-        in session.execute(statement)
+        for reference, titre, date_heure_debut, nom_salle, numero_salle in session.execute(
+            statement
+        )
     ]
+
+
+def cancel_reservation(session: Session, user: Utilisateur, reference: str) -> None:
+    statement = (
+        select(Reservation, Seance.date_heure_debut)
+        .join(Seance, Reservation.id_seance == Seance.id_seance)
+        .where(
+            Reservation.reference == reference,
+            Reservation.id_utilisateur == user.id_utilisateur,
+        )
+    )
+
+    reservation_and_date = session.execute(statement).one_or_none()
+
+    if reservation_and_date is None:
+        raise HTTPException(status_code=404, detail="Réservation introuvable")
+
+    reservation, date_heure_debut = reservation_and_date
+    if (
+        reservation.is_paid
+        or reservation.is_cancelled
+        or date_heure_debut <= datetime.now()
+    ):
+        raise HTTPException(
+            status_code=409,
+            detail="Cette réservation ne peut plus être annulée",
+        )
+
+    reservation.is_cancelled = True
+    session.commit()

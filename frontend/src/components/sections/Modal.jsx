@@ -8,7 +8,7 @@ const modalTypes = {
   validation: { title: 'Validation', confirmLabel: 'Oui', cancelLabel: 'Non' },
 }
 
-function Modal({ type, message, onClose, onConfirm, onCancel }) {
+function Modal({ type, message, onClose, onConfirm, onCancel, isLoading = false }) {
   const content = modalTypes[type]
   const isValidation = type === 'validation'
   const details = message?.detail ?? message
@@ -32,7 +32,7 @@ function Modal({ type, message, onClose, onConfirm, onCancel }) {
         <div className="modal__actions">
           {isValidation ? (
             <>
-              <button className="button-gold" type="button" onClick={onConfirm}>
+              <button className="button-gold" type="button" onClick={onConfirm} disabled={isLoading}>
                 {content.confirmLabel}
               </button>
               <button className="button-black" type="button" onClick={onCancel}>

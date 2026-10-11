@@ -120,3 +120,22 @@ def mock_reservation_list_route(monkeypatch):
 
     return get_user_reservations
 
+
+@pytest.fixture
+def mock_cancel_reservation_route(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="client")
+    cancel_reservation = Mock()
+
+    monkeypatch.setattr(
+        "app.routes.reservations.cancel_reservation",
+        cancel_reservation,
+    )
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: user,
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return cancel_reservation, user
+
