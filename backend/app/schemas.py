@@ -19,6 +19,8 @@ class SeanceResponse(BaseModel):
     id_seance: int
     date_heure_debut: datetime
     id_salle: int
+    nom_salle: str
+    numero_salle: int
     places_disponibles: int
 
 

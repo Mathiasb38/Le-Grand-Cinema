@@ -31,15 +31,19 @@ def get_film_details(
     if film is None:
         return None
 
-    seances = [
-        SeanceResponse(
-            id_seance=seance.id_seance,
-            date_heure_debut=seance.date_heure_debut,
-            id_salle=seance.id_salle,
-            places_disponibles=get_available_places(session, seance),
+    seances = []
+    for seance in get_film_seances(session, id_film, selected_date):
+        salle = session.get(Salle, seance.id_salle)
+        seances.append(
+            SeanceResponse(
+                id_seance=seance.id_seance,
+                date_heure_debut=seance.date_heure_debut,
+                id_salle=seance.id_salle,
+                nom_salle=salle.nom,
+                numero_salle=salle.numero,
+                places_disponibles=get_available_places(session, seance),
+            )
         )
-        for seance in get_film_seances(session, id_film, selected_date)
-    ]
 
     return FilmDetailsResponse(
         id_film=film.id_film,
