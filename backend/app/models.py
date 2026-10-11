@@ -32,7 +32,7 @@ class Salle(Base):
 
     id_salle: Mapped[int] = mapped_column(Integer, primary_key=True)
     numero: Mapped[int] = mapped_column(SmallInteger, unique=True)
-    nom: Mapped[str | None] = mapped_column(String(50))
+    nom: Mapped[str] = mapped_column(String(50), nullable=False)
     capacite_max: Mapped[int] = mapped_column(SmallInteger)
 
 

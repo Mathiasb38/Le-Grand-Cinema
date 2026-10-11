@@ -6,6 +6,7 @@ import pytest
 
 from app.database import get_db
 from app.main import app
+from app.services.auth_service import get_current_user
 
 
 @pytest.fixture
@@ -14,6 +15,8 @@ def mock_film_routes(monkeypatch):
         id_seance=1,
         date_heure_debut=datetime.now() + timedelta(days=1),
         id_salle=1,
+        nom_salle="Salle principale",
+        numero_salle=1,
         places_disponibles=10,
     )
     film = SimpleNamespace(
@@ -61,4 +64,31 @@ def mock_login_route(monkeypatch):
     monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
 
     return authenticate_user
+
+
+@pytest.fixture
+def mock_reservation_route(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="client")
+    reservations = [
+        SimpleNamespace(
+            reference="RES-TEST",
+            date_reservation=datetime.now(),
+            id_seance=1,
+            id_place=1,
+        )
+    ]
+    create_reservation = Mock(return_value=reservations)
+
+    monkeypatch.setattr(
+        "app.routes.reservations.create_reservation",
+        create_reservation,
+    )
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: user,
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return create_reservation
 

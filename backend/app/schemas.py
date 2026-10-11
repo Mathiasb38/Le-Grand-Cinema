@@ -19,6 +19,8 @@ class SeanceResponse(BaseModel):
     id_seance: int
     date_heure_debut: datetime
     id_salle: int
+    nom_salle: str
+    numero_salle: int
     places_disponibles: int
 
 
@@ -47,3 +49,17 @@ class UtilisateurResponse(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str
+
+
+class ReservationCreate(BaseModel):
+    id_seance: int
+    nombre_places: int = Field(gt=0)
+
+
+class ReservationResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    reference: str
+    date_reservation: datetime
+    id_seance: int
+    id_place: int

@@ -138,6 +138,12 @@
     text-align: center;
   }
 
+  /* Reservation */
+  .reservation-panel {
+    width: 100%;
+    padding: 16px;
+  }
+
   /* Auth */
   .auth-page .display-xl {
     width: auto;
