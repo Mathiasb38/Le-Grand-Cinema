@@ -32,3 +32,16 @@ def test_list_reservations(mock_reservation_list_route):
     assert response.json()[0]["date_heure_debut"] == "2027-01-01T20:30:00"
     assert response.json()[0]["nom_salle"] == "test"
     assert response.json()[0]["numero_salle"] == 666
+
+
+def test_cancel_reservation(mock_cancel_reservation_route):
+    cancel_reservation, _ = mock_cancel_reservation_route
+    response = TestClient(app).delete("/reservations/RES-TEST")
+
+    assert response.status_code == 204
+    cancel_reservation.assert_called_once()
+
+def test_cancel_reservation_requires_authentication():
+    response = TestClient(app).delete("/reservations/RES-TEST")
+
+    assert response.status_code == 401
