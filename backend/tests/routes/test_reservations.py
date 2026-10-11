@@ -11,3 +11,13 @@ def test_create_reservation(mock_reservation_route):
 
     assert response.status_code == 201
     assert response.json()[0]["reference"] == "RES-TEST"
+
+
+def test_create_reservation_requires_authentication():
+    response = TestClient(app).post(
+        "/reservations",
+        json={"id_seance": 1, "nombre_places": 1},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Authentification requise"

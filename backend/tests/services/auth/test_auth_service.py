@@ -12,6 +12,7 @@ from app.services.auth_service import (
     create_user,
     decode_access_token,
     require_admin,
+    get_current_user,
 )
 
 
@@ -89,6 +90,13 @@ def test_decode_access_token_rejects_expired_token(monkeypatch) -> None:
     )
 
     assert decode_access_token(token) is None
+
+
+def test_get_current_user(db_session) -> None:
+    with pytest.raises(HTTPException) as error:
+        get_current_user(None, db_session)
+
+    assert error.value.status_code == 401
 
 
 def test_require_admin() -> None:
