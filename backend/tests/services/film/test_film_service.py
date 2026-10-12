@@ -1,4 +1,11 @@
-from app.services.film_service import get_film_details, get_programmed_films
+from app.services.film_service import (
+    get_film_details,
+    get_programmed_films,
+    get_all_films,
+    create_film,
+    update_film,
+)
+from app.schemas import FilmWrite
 
 
 def test_get_programmed_films(film_data) -> None:
@@ -26,3 +33,55 @@ def test_get_film_details(film_data) -> None:
     result_ids = [seance.id_seance for seance in result.seances]
     assert past_seance.id_seance not in result_ids
     assert far_seance.id_seance not in result_ids
+
+
+def test_get_all_films(film_data) -> None:
+    db_session, past_film, programmed_film, far_film, *_ = film_data
+    result = get_all_films(db_session)
+
+    assert past_film in result
+    assert programmed_film in result
+    assert far_film in result
+
+
+def test_create_film(db_session) -> None:
+    film_data = FilmWrite(
+        titre="Nouveau film",
+        duree_minutes=100,
+        affiche_url="https://example.com/nouveau.jpg",
+        description="Description du nouveau film",
+    )
+
+    film = create_film(db_session, film_data)
+
+    assert film.id_film is not None
+    assert film.titre == film_data.titre
+    assert film.description == film_data.description
+
+
+def test_update_film(film_data) -> None:
+    db_session, film, *_ = film_data
+    updated_data = FilmWrite(
+        titre="Titre modifié",
+        duree_minutes=130,
+        affiche_url="https://example.com/modifie.jpg",
+        description="Description modifiée",
+    )
+
+    updated_film = update_film(db_session, film.id_film, updated_data)
+
+    assert updated_film.titre == updated_data.titre
+    assert updated_film.duree_minutes == updated_data.duree_minutes
+    assert updated_film.affiche_url == updated_data.affiche_url
+    assert updated_film.description == updated_data.description
+
+
+def test_update_film_not_found(db_session) -> None:
+    updated_data = FilmWrite(
+        titre="Titre modifié",
+        duree_minutes=130,
+        affiche_url="https://example.com/modifie.jpg",
+        description="Description modifiée",
+    )
+
+    assert update_film(db_session, 999, updated_data) is None
