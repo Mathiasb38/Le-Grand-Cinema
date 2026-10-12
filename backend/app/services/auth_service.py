@@ -68,6 +68,7 @@ def create_access_token(user: Utilisateur) -> str:
 
     payload = {
         "sub": str(user.id_utilisateur),
+        "role": user.role,
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
     return jwt.encode(payload, secret_key, algorithm="HS256")

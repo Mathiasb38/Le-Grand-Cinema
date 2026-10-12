@@ -74,6 +74,7 @@ def test_create_access_token(monkeypatch, db_session, user_data) -> None:
     )
 
     assert payload["sub"] == str(user.id_utilisateur)
+    assert payload["role"] == user.role
     assert "exp" in payload
 
 
