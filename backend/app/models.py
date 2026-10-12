@@ -9,7 +9,8 @@ from sqlalchemy import (
     String,
     UniqueConstraint,
     Index,
-    text
+    text,
+    Text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -44,6 +45,7 @@ class Film(Base):
     titre: Mapped[str] = mapped_column(String(50))
     duree_minutes: Mapped[int] = mapped_column(SmallInteger)
     affiche_url: Mapped[str] = mapped_column(String(500))
+    description: Mapped[str] = mapped_column(Text, nullable=False)
 
 class Seance(Base):
 

@@ -11,6 +11,14 @@ class FilmResponse(BaseModel):
     titre: str
     duree_minutes: int
     affiche_url: str
+    description: str
+
+
+class FilmWrite(BaseModel):
+    titre: str = Field(min_length=1, max_length=50)
+    duree_minutes: int = Field(gt=0, le=32767)
+    affiche_url: str = Field(min_length=1, max_length=500)
+    description: str = Field(min_length=1)
 
 
 class SeanceResponse(BaseModel):
