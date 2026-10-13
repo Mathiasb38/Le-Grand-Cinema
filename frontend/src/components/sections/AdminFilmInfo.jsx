@@ -23,7 +23,7 @@ function AdminFilmInfo({ film }) {
       const updatedFilm = await updateAdminFilm(film.id_film, {
         titre: filmData.titre,
         duree_minutes: filmData.duree_minutes,
-        affiche_url: film.affiche_url,
+        affiche_url: filmData.affiche_url,
         description: filmData.description,
       }, token)
       setFilmData(updatedFilm)
@@ -38,12 +38,19 @@ function AdminFilmInfo({ film }) {
     <section className="panel" aria-label={`Détails du film ${film.titre}`}>
       <div className="film-info__summary">
         <div className="film-poster">
-          <img src={film.affiche_url} alt={`Affiche du film ${film.titre}`} />
+          <img src={filmData.affiche_url} alt={`Affiche du film ${filmData.titre}`} />
         </div>
 
         <form className="film-info__info" onSubmit={handleSubmit}>
 
           <div className="admin-film-info__form">
+            <input className='admin-film-info__affiche petit'
+              type="url"
+              placeholder="URL de l’affiche"
+              required
+              value={filmData.affiche_url}
+              onChange={(event) => setFilmData({ ...filmData, affiche_url: event.target.value })}
+            />
             <input className="admin-film-info__titre display-l"
               maxLength="50"
               placeholder="Titre du film"

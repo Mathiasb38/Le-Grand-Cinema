@@ -283,6 +283,11 @@ a {
 
 }
 
+.admin-film-info__affiche {
+  padding: var(--spacing-component-padding);
+  background: none;
+}
+
 .admin-film-info__titre {
   padding: var(--spacing-component-padding);
   background: none;
@@ -293,7 +298,6 @@ a {
   padding: var(--spacing-component-padding);
   background: none;
   height: 200px;
-
 }
 
 .admin-film-info__duree {
