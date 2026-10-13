@@ -9,25 +9,26 @@ import { useAuth } from '../context/AuthContext.jsx'
 
 export default FilmDetail
 
-function FilmDetail() {
+function FilmDetail({ isNew = false }) {
   const { idFilm } = useParams()
   const { isAdmin } = useAuth()
   const [film, setFilm] = useState(null)
 
   useEffect(() => {
+    if (isNew) return
+
     getFilmDetails(idFilm)
       .then(setFilm)
       .catch(() => setFilm(null))
-  }, [idFilm])
+  }, [idFilm, isNew])
 
-  if (!film) {
+  if ((!isNew && !film) || (isNew && !isAdmin)) {
     return null
   }
 
   return (
     <main className="film-detail">
-      {isAdmin && <AdminFilmInfo film={film} />}
-      {!isAdmin && <FilmInfo film={film} />}
+      {isAdmin ? <AdminFilmInfo film={film} /> : <FilmInfo film={film} />}
     </main>
   )
 }

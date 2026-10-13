@@ -262,6 +262,14 @@ a {
   height: 360px;
 }
 
+.film-poster{
+  width: 240px;
+  height: 360px;
+  background: var(--color-surface);
+
+}
+
+
 .film-info__info {
   padding: var(--spacing-component-padding);
   min-width: 0
