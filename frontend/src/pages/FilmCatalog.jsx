@@ -11,18 +11,22 @@ export default FilmCatalog
 function FilmCatalog() {
   const { isAdmin, token } = useAuth()
   const [films, setFilms] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const cardsRef = useRef(null)
 
   useEffect(() => {
-    (isAdmin ? getAdminFilms(token) : getFilms())
-      .then(setFilms)
+    setIsLoading(true)
+    const request = isAdmin ? getAdminFilms(token) : getFilms()
+    request.then(setFilms).finally(() => setIsLoading(false))
   }, [isAdmin, token])
 
   return (
     <main className="catalog">
       <section className="panel" aria-label="Catalogue des films">
 
-        {films.length > 0 && (
+        {isLoading ? (
+          <p>Chargement des films...</p>
+        ) : films.length > 0 && (
           <div className="panel__list">
             <button
               className="panel__arrow panel__arrow--left"
