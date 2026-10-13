@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext.jsx'
 export default MobileMenu
 
 function MobileMenu({ onClose }) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isAdmin } = useAuth()
 
   return (
     <nav className="mobile-nav" aria-label="Navigation mobile">
@@ -15,11 +15,11 @@ function MobileMenu({ onClose }) {
       >
         Films
       </Link>
-      {isAuthenticated ? (
+      {!isAdmin && isAuthenticated ? (
         <Link className="header__link" to="/compte" onClick={onClose}>
           Mon compte
         </Link>
-      ) : (
+      ) : !isAdmin && (
         <Link className="button-black" to="/connexion" onClick={onClose}>
           Connexion
         </Link>

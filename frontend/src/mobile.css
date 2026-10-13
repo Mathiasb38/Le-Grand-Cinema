@@ -8,14 +8,31 @@
     flex-direction: column;
     align-items: center;
   }
+
   .auth-page .display-xl {
     margin: 40px 0 0;
     text-align: center;
     width: auto;
   }
+
   .auth-panel {
     width: 70%;
     min-width: 330px;
+  }
+
+  .film-info__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .film-info__info {
+    width: 100%;
+    text-align: center;
+  }
+
+  .admin-film-info__form .button-gold {
+    align-self: center;
   }
 
 }
@@ -124,19 +141,16 @@
     display: none;
   }
 
+  .catalog__admin-action {
+    justify-content: center;
+  }
+
   /* Film detail */
 
-  .film-info__summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
 
 
-  .film-info__info {
-    width: 100%;
-    text-align: center;
-  }
+
+
 
   /* Reservation */
   .reservation-panel {
@@ -148,6 +162,7 @@
   .auth-page .display-xl {
     width: auto;
   }
+
   .auth-page__hero {
     flex: 0;
   }

@@ -11,8 +11,8 @@ function FilmInfo({ film }) {
         </div>
         <div className="film-info__info">
           <h1 className="display-l">{film.titre}</h1>
-          <p className="principal">Description du film</p>
           <p className="muted">{film.duree_minutes} min</p>
+          <p className="principal">{film.description}</p>
         </div>
       </div>
 

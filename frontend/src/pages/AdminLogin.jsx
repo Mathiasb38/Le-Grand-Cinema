@@ -3,12 +3,14 @@ import { useState } from 'react'
 import AuthPanel from '../components/groups/AuthPanel.jsx'
 import Modal from '../components/sections/Modal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 export default AdminLogin
 
 function AdminLogin() {
   const [modal, setModal] = useState(null)
   const { adminLogin } = useAuth()
+  const navigate = useNavigate()
 
   async function handleSubmit({ email, password, clearForm }) {
     setModal(null)
@@ -16,6 +18,7 @@ function AdminLogin() {
     try {
       await adminLogin(email, password)
       clearForm()
+      navigate('/films')
     } catch (error) {
       setModal({ type: 'error', message: error.message })
     }
