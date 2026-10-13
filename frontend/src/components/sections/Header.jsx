@@ -9,7 +9,7 @@ export default Header
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isAdmin } = useAuth()
 
   return (
     <header className="header">
@@ -19,11 +19,11 @@ function Header() {
       <nav className="header__nav" aria-label="Navigation principale">
         <Link className="header__link" to="/films">Films</Link>
       </nav>
-      {isAuthenticated ? (
+      {!isAdmin && isAuthenticated ? (
         <Link className="user-icon" to="/compte" aria-label="Mon compte">
           <User aria-hidden="true" />
         </Link>
-      ) : (
+      ) : !isAdmin && (
         <Link className="button-black" id="login-button" to="/connexion">Connexion</Link>
       )}
       <button

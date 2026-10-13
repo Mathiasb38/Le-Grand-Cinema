@@ -12,6 +12,7 @@ def reservation_data(db_session):
         titre="Film test",
         duree_minutes=120,
         affiche_url="https://example.com/film.jpg",
+        description="Description du film test",
     )
     user = Utilisateur(
         email="reservation@example.com",

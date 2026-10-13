@@ -4,7 +4,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.models import Film, Seance, Reservation, Salle, Billet
-from app.schemas import FilmDetailsResponse, SeanceResponse
+from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite
 
 
 def get_programmed_films(session: Session) -> list[Film]:
@@ -50,6 +50,7 @@ def get_film_details(
         titre=film.titre,
         duree_minutes=film.duree_minutes,
         affiche_url=film.affiche_url,
+        description=film.description,
         seances=seances,
     )
 
@@ -103,3 +104,33 @@ def get_film_seances(
     )
 
     return list(session.scalars(statement))
+
+
+def get_all_films(session: Session) -> list[Film]:
+    return list(session.scalars(select(Film).order_by(Film.titre)))
+
+
+def create_film(session: Session, film_data: FilmWrite) -> Film:
+    film = Film(**film_data.model_dump())
+    session.add(film)
+    session.commit()
+    session.refresh(film)
+    return film
+
+
+def update_film(
+    session: Session, id_film: int, film_data: FilmWrite
+) -> Film | None:
+    film = session.get(Film, id_film)
+
+    if film is None:
+        return None
+
+    film.titre = film_data.titre
+    film.duree_minutes = film_data.duree_minutes
+    film.affiche_url = film_data.affiche_url
+    film.description = film_data.description
+
+    session.commit()
+    session.refresh(film)
+    return film

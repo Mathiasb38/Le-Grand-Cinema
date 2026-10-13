@@ -29,6 +29,7 @@ function App() {
         } />
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
+        <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
         <Route path="/reservation/:idSeance" element={<Reservation />} />
         <Route path="/compte" element={<ClientAccount />} />
         <Route path="/connexion" element={<Login />} />

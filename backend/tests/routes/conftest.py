@@ -24,6 +24,7 @@ def mock_film_routes(monkeypatch):
         titre="Film test",
         duree_minutes=120,
         affiche_url="https://example.com/film.jpg",
+        description="Description du film test",
         seances=[seance],
     )
 
@@ -138,4 +139,28 @@ def mock_cancel_reservation_route(monkeypatch):
     monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
 
     return cancel_reservation, user
+
+@pytest.fixture
+def mock_admin_film_routes(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="admin")
+    film = SimpleNamespace(
+        id_film=1,
+        titre="Film test",
+        duree_minutes=120,
+        affiche_url="https://example.com/film.jpg",
+        description="Description du film test",
+    )
+    get_all_films = Mock(return_value=[film])
+    create_film = Mock(return_value=film)
+    update_film = Mock(return_value=film)
+
+    monkeypatch.setattr("app.routes.films.get_all_films", get_all_films)
+    monkeypatch.setattr("app.routes.films.create_film", create_film)
+    monkeypatch.setattr("app.routes.films.update_film", update_film)
+    monkeypatch.setitem(app.dependency_overrides, get_current_user, lambda: user)
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return get_all_films, create_film, update_film
+
+
 

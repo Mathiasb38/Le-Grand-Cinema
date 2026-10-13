@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.services.auth_service import get_current_user
+from types import SimpleNamespace
 
 
 def test_list_films(mock_film_routes) -> None:
@@ -22,3 +24,52 @@ def test_film_seances(mock_film_routes) -> None:
 
     assert response.status_code == 200
     assert response.json()[0]["places_disponibles"] == 10
+
+
+def test_admin_list_films(mock_admin_film_routes) -> None:
+    response = TestClient(app).get("/admin/films")
+
+    assert response.status_code == 200
+    assert response.json()[0]["titre"] == "Film test"
+
+
+def test_admin_create_film(mock_admin_film_routes) -> None:
+    response = TestClient(app).post("/admin/films", json={
+        "titre": "Film test",
+        "duree_minutes": 120,
+        "affiche_url": "https://example.com/film.jpg",
+        "description": "Description du film test",
+    })
+
+    assert response.status_code == 201
+    assert response.json()["id_film"] == 1
+    assert response.json()["description"] == "Description du film test"
+
+
+def test_admin_update_film(mock_admin_film_routes) -> None:
+    response = TestClient(app).put("/admin/films/1", json={
+        "titre": "Film modifié",
+        "duree_minutes": 130,
+        "affiche_url": "https://example.com/film-modifie.jpg",
+        "description": "Nouvelle description",
+    })
+
+    assert response.status_code == 200
+    assert response.json()["titre"] == "Film test"
+
+
+def test_admin_film_routes_require_admin(monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).get("/admin/films")
+
+    assert response.status_code == 403
+
+
+def test_admin_film_routes_require_authentication() -> None:
+    response = TestClient(app).get("/admin/films")
+
+    assert response.status_code == 401

@@ -1,3 +1,5 @@
+import { apiRequest } from './api.js'
+
 const API_URL = import.meta.env.VITE_API_URL
 
 export async function getFilms() {
@@ -28,4 +30,32 @@ export async function getFilmSessions(idFilm, date) {
   }
 
   return response.json()
+}
+
+export async function getAdminFilms(token) {
+  return apiRequest('/admin/films', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminFilm(film, token) {
+  return apiRequest('/admin/films', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(film),
+  })
+}
+
+export async function updateAdminFilm(idFilm, film, token) {
+  return apiRequest(`/admin/films/${idFilm}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(film),
+  })
 }
