@@ -181,3 +181,7 @@ def update_film(
     session.commit()
     session.refresh(film)
     return film
+
+
+def get_all_salles(session: Session) -> list[Salle]:
+    return list(session.scalars(select(Salle).order_by(Salle.numero)))

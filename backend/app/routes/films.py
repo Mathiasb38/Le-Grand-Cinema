@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Film
-from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse, FilmWrite, SeanceCreate
+from app.models import Film, Salle
+from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse, FilmWrite, SeanceCreate, SalleResponse
 from app.services.film_service import (
     get_film_details,
     get_programmed_films,
@@ -13,6 +13,7 @@ from app.services.film_service import (
     create_film,
     update_film,
     create_seance,
+    get_all_salles,
 )
 from app.services.auth_service import require_admin
 
@@ -67,5 +68,10 @@ def admin_update_film(id_film: int, film_data: FilmWrite, session: Session = Dep
 @router.post("/admin/seances", response_model=SeanceResponse, status_code=201, dependencies=[Depends(require_admin)])
 def admin_create_seance(seance_data: SeanceCreate, session: Session = Depends(get_db)) -> SeanceResponse:
     return create_seance(session, seance_data)
+
+
+@router.get("/admin/salles", response_model=list[SalleResponse], dependencies=[Depends(require_admin)])
+def admin_list_salles(session: Session = Depends(get_db)) -> list[Salle]:
+    return get_all_salles(session)
 
 
