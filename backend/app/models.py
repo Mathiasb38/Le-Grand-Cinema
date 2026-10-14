@@ -50,6 +50,7 @@ class Film(Base):
 class Seance(Base):
 
     __tablename__ = "SEANCE"
+    __table_args__ = (Index("ix_seance_salle_date_heure_debut", "id_salle", "date_heure_debut"),)
 
     id_seance: Mapped[int] = mapped_column(Integer, primary_key=True)
     date_heure_debut: Mapped[datetime] = mapped_column(DateTime)
