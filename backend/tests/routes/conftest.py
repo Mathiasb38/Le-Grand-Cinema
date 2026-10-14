@@ -183,4 +183,22 @@ def mock_admin_seance_route(monkeypatch):
     return create_seance
 
 
+@pytest.fixture
+def mock_admin_salles_route(monkeypatch):
+    salles = [
+        SimpleNamespace(id_salle=1, nom="Salle principale", numero=1),
+    ]
+    get_all_salles = Mock(return_value=salles)
+
+    monkeypatch.setattr("app.routes.films.get_all_salles", get_all_salles)
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(id_utilisateur=1, role="admin"),
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return get_all_salles
+
+
 

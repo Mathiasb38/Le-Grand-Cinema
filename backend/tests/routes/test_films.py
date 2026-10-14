@@ -86,6 +86,25 @@ def test_admin_create_seance_requires_admin(mock_admin_seance_route, monkeypatch
     assert response.status_code == 403
 
 
+def test_admin_list_salles(mock_admin_salles_route) -> None:
+    response = TestClient(app).get("/admin/salles")
+
+    assert response.status_code == 200
+    assert response.json() == [{"id_salle": 1, "nom": "Salle principale", "numero": 1}]
+    mock_admin_salles_route.assert_called_once()
+
+
+def test_admin_list_salles_requires_admin(mock_admin_salles_route, monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).get("/admin/salles")
+
+    assert response.status_code == 403
+
+
 def test_admin_film_routes_require_admin(monkeypatch) -> None:
     monkeypatch.setitem(
         app.dependency_overrides,
