@@ -163,4 +163,24 @@ def mock_admin_film_routes(monkeypatch):
     return get_all_films, create_film, update_film
 
 
+@pytest.fixture
+def mock_admin_seance_route(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="admin")
+    seance = SimpleNamespace(
+        id_seance=1,
+        date_heure_debut=datetime(2027, 1, 1, 20),
+        id_salle=1,
+        nom_salle="Salle principale",
+        numero_salle=1,
+        places_disponibles=100,
+    )
+    create_seance = Mock(return_value=seance)
+
+    monkeypatch.setattr("app.routes.films.create_seance", create_seance)
+    monkeypatch.setitem(app.dependency_overrides, get_current_user, lambda: user)
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return create_seance
+
+
 

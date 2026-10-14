@@ -5,7 +5,14 @@ from app.services.film_service import (
     create_film,
     update_film,
 )
-from app.schemas import FilmWrite
+from app.schemas import FilmWrite, SeanceCreate
+from app.services.film_service import create_seance
+from app.models import Salle
+from sqlalchemy import select
+from datetime import datetime, timedelta
+
+import pytest
+from fastapi import HTTPException
 
 
 def test_get_programmed_films(film_data) -> None:
@@ -43,6 +50,35 @@ def test_get_all_films(film_data) -> None:
     assert programmed_film in result
     assert far_film in result
 
+
+def test_create_seance(film_data) -> None:
+    db_session, film, *_ = film_data
+    salle = db_session.scalar(select(Salle))
+    seance_data = SeanceCreate(
+        id_film=film.id_film,
+        id_salle=salle.id_salle,
+        date_heure_debut=datetime.now() + timedelta(days=2),
+    )
+
+    seance = create_seance(db_session, seance_data)
+
+    assert seance.id_seance is not None
+    assert seance.date_heure_debut == seance_data.date_heure_debut
+    assert seance.id_salle == salle.id_salle
+
+
+def test_create_seance_rejects_overlapping_session(film_data) -> None:
+    db_session, film, _, _, _, existing_seance, _ = film_data
+    seance_data = SeanceCreate(
+        id_film=film.id_film,
+        id_salle=existing_seance.id_salle,
+        date_heure_debut=existing_seance.date_heure_debut + timedelta(minutes=30),
+    )
+
+    with pytest.raises(HTTPException) as error:
+        create_seance(db_session, seance_data)
+
+    assert error.value.status_code == 409
 
 def test_create_film(db_session) -> None:
     film_data = FilmWrite(
