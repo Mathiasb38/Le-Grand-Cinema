@@ -35,6 +35,11 @@
     align-self: center;
   }
 
+  .admin-seance-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
 }
 
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { updateAdminFilm, createAdminFilm } from '../../services/filmService.js'
 import { useNavigate } from 'react-router-dom'
+import AdminSessionList from '../groups/AdminSessionList.jsx'
 
 const emptyFilm = { titre: '', duree_minutes: '', affiche_url: '', description: '' }
 
@@ -103,6 +104,10 @@ function AdminFilmInfo({ film = null }) {
         </form>
 
       </div>
+
+      {film && (
+        <AdminSessionList idFilm={film.id_film} sessions={film.seances} />
+      )}
     </section>
   )
 }

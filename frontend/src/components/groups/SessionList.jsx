@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useRef, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getFilmSessions } from '../../services/filmService.js'
-import { scrollCards } from '../../utils/helpers.js'
+import { scrollCards, formatDate, getDateKey, getNextDates } from '../../utils/helpers.js'
 
 export default SessionList
 
@@ -117,24 +117,4 @@ function SessionList({ idFilm, sessions }) {
       )}
     </div>
   )
-}
-
-function getDateKey(date) {
-  return date.toLocaleDateString('sv-SE')
-}
-
-function getNextDates() {
-  return Array.from({ length: 7 }, (_, index) => {
-    const date = new Date()
-    date.setDate(date.getDate() + index)
-    return getDateKey(date)
-  })
-}
-
-function formatDate(date) {
-  return new Date(`${date}T12:00:00`).toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-  })
 }

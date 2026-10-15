@@ -59,3 +59,20 @@ export async function updateAdminFilm(idFilm, film, token) {
     body: JSON.stringify(film),
   })
 }
+
+export async function getAdminSalles(token) {
+  return apiRequest('/admin/salles', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminSeance(seance, token) {
+  return apiRequest('/admin/seances', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(seance),
+  })
+}
