@@ -26,7 +26,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://le-grand-cinema-frontend.onrender.com"
+        "https://le-grand-cinema-frontend.onrender.com",
+        "https://le-grand-cinema-frondend-pre-production.onrender.com"
 
     ],
     allow_credentials=True,
