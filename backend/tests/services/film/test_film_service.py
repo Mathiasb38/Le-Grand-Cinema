@@ -67,6 +67,21 @@ def test_create_seance(film_data) -> None:
     assert seance.id_salle == salle.id_salle
 
 
+def test_create_seance_rejects_past_date(film_data) -> None:
+    db_session, film, *_ = film_data
+    salle = db_session.scalar(select(Salle))
+    seance_data = SeanceCreate(
+        id_film=film.id_film,
+        id_salle=salle.id_salle,
+        date_heure_debut=datetime.now() - timedelta(minutes=1),
+    )
+
+    with pytest.raises(HTTPException) as error:
+        create_seance(db_session, seance_data)
+
+    assert error.value.status_code == 400
+
+
 def test_create_seance_rejects_overlapping_session(film_data) -> None:
     db_session, film, _, _, _, existing_seance, _ = film_data
     seance_data = SeanceCreate(

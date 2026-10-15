@@ -112,6 +112,12 @@ def get_all_films(session: Session) -> list[Film]:
 
 
 def create_seance(session: Session, seance_data: SeanceCreate) -> SeanceResponse:
+    if seance_data.date_heure_debut < datetime.now():
+        raise HTTPException(
+            status_code=400,
+            detail="Date invalide",
+        )
+
     film = session.get(Film, seance_data.id_film)
     if film is None:
         raise HTTPException(status_code=404, detail="Film introuvable")
