@@ -4,7 +4,8 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.models import Film, Seance, Reservation, Salle, Billet
-from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite
+from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite, SeanceCreate
+from fastapi import HTTPException
 
 
 def get_programmed_films(session: Session) -> list[Film]:
@@ -110,6 +111,58 @@ def get_all_films(session: Session) -> list[Film]:
     return list(session.scalars(select(Film).order_by(Film.titre)))
 
 
+def create_seance(session: Session, seance_data: SeanceCreate) -> SeanceResponse:
+    if seance_data.date_heure_debut < datetime.now():
+        raise HTTPException(
+            status_code=400,
+            detail="Date invalide",
+        )
+
+    film = session.get(Film, seance_data.id_film)
+    if film is None:
+        raise HTTPException(status_code=404, detail="Film introuvable")
+
+    salle = session.get(Salle, seance_data.id_salle)
+    if salle is None:
+        raise HTTPException(status_code=404, detail="Salle introuvable")
+
+    start = seance_data.date_heure_debut
+    end = start + timedelta(minutes=film.duree_minutes)
+    day_start = datetime.combine(start.date(), time.min)
+    conflict = session.execute(
+        select(Seance.id_seance)
+        .join(Film, Seance.id_film == Film.id_film)
+        .where(
+            Seance.id_salle == salle.id_salle,
+            Seance.date_heure_debut >= day_start - timedelta(days=1),
+            Seance.date_heure_debut < end,
+            Seance.date_heure_debut
+            + func.make_interval(0, 0, 0, 0, 0, Film.duree_minutes)
+            > start,
+        )
+        .limit(1)
+    ).first()
+    if conflict:
+        raise HTTPException(
+            status_code=409,
+            detail="La salle est déjà occupée sur ce créneau",
+        )
+
+    seance = Seance(**seance_data.model_dump())
+    session.add(seance)
+    session.commit()
+    session.refresh(seance)
+
+    return SeanceResponse(
+        id_seance=seance.id_seance,
+        date_heure_debut=seance.date_heure_debut,
+        id_salle=salle.id_salle,
+        nom_salle=salle.nom,
+        numero_salle=salle.numero,
+        places_disponibles=get_available_places(session, seance),
+    )
+
+
 def create_film(session: Session, film_data: FilmWrite) -> Film:
     film = Film(**film_data.model_dump())
     session.add(film)
@@ -134,3 +187,7 @@ def update_film(
     session.commit()
     session.refresh(film)
     return film
+
+
+def get_all_salles(session: Session) -> list[Salle]:
+    return list(session.scalars(select(Salle).order_by(Salle.numero)))

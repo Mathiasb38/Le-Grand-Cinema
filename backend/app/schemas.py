@@ -32,6 +32,20 @@ class SeanceResponse(BaseModel):
     places_disponibles: int
 
 
+class SeanceCreate(BaseModel):
+    id_film: int
+    id_salle: int
+    date_heure_debut: datetime
+
+
+class SalleResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id_salle: int
+    nom: str
+    numero: int
+
+
 class FilmDetailsResponse(FilmResponse):
     seances: list[SeanceResponse]
 
