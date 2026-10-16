@@ -86,6 +86,54 @@ def test_admin_create_seance_requires_admin(mock_admin_seance_route, monkeypatch
     assert response.status_code == 403
 
 
+def test_admin_update_seance(mock_admin_update_seance_route) -> None:
+    response = TestClient(app).put("/admin/seances/1", json={
+        "id_salle": 2,
+        "date_heure_debut": "2027-01-02T20:00:00",
+    })
+
+    assert response.status_code == 200
+    assert response.json()["id_seance"] == 1
+    assert response.json()["id_salle"] == 2
+    mock_admin_update_seance_route.assert_called_once()
+    assert mock_admin_update_seance_route.call_args.args[1] == 1
+    assert mock_admin_update_seance_route.call_args.args[2].id_salle == 2
+
+
+def test_admin_update_seance_requires_admin(mock_admin_update_seance_route, monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).put("/admin/seances/1", json={
+        "id_salle": 2,
+        "date_heure_debut": "2027-01-02T20:00:00",
+    })
+
+    assert response.status_code == 403
+
+
+def test_admin_delete_seance(mock_admin_delete_seance_route) -> None:
+    response = TestClient(app).delete("/admin/seances/1")
+
+    assert response.status_code == 204
+    assert response.content == b""
+    mock_admin_delete_seance_route.assert_called_once()
+    assert mock_admin_delete_seance_route.call_args.args[1] == 1
+
+
+def test_admin_delete_seance_requires_admin(mock_admin_delete_seance_route, monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).delete("/admin/seances/1")
+
+    assert response.status_code == 403
+
+
 def test_admin_list_salles(mock_admin_salles_route) -> None:
     response = TestClient(app).get("/admin/salles")
 
