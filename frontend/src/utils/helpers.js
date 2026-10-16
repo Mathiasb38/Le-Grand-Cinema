@@ -1,4 +1,4 @@
-export { formatDate, getCurrentDateTime, getDateKey, getNextDates, scrollCards }
+export { formatDate, getCurrentDateTime, getDateKey, getNextDates, scrollCards, getDateTimeInputValue }
 
 function scrollCards(ref, direction, distance) {
   ref.current?.scrollBy({ left: direction * distance, behavior: 'smooth' })
@@ -28,4 +28,10 @@ function formatDate(date) {
     day: 'numeric',
     month: 'long',
   })
+}
+
+function getDateTimeInputValue(date) {
+  const localDate = new Date(date)
+  localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset())
+  return localDate.toISOString().slice(0, 16)
 }

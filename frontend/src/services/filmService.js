@@ -38,6 +38,12 @@ export async function getAdminFilms(token) {
   })
 }
 
+export async function getAdminFilmDetails(idFilm, token) {
+  return apiRequest(`/admin/films/${idFilm}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 export async function createAdminFilm(film, token) {
   return apiRequest('/admin/films', {
     method: 'POST',
@@ -74,5 +80,23 @@ export async function createAdminSeance(seance, token) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(seance),
+  })
+}
+
+export async function updateAdminSeance(idSeance, seance, token) {
+  return apiRequest(`/admin/seances/${idSeance}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(seance),
+  })
+}
+
+export async function deleteAdminSeance(idSeance, token) {
+  return apiRequest(`/admin/seances/${idSeance}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
   })
 }
