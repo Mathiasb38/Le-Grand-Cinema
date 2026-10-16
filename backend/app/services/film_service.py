@@ -25,7 +25,7 @@ def get_programmed_films(session: Session) -> list[Film]:
 
 
 def get_film_details(
-    session: Session, id_film: int, selected_date: date
+    session: Session, id_film: int, selected_date: date | None = None
 ) -> FilmDetailsResponse | None:
     film = session.get(Film, id_film)
 
@@ -82,8 +82,19 @@ def get_available_places(session: Session, seance: Seance) -> int:
 
 
 def get_film_seances(
-    session: Session, id_film: int, selected_date: date
+    session: Session, id_film: int, selected_date: date | None
 ) -> list[Seance]:
+    if selected_date is None:
+        statement = (
+            select(Seance)
+            .where(
+                Seance.id_film == id_film,
+                Seance.date_heure_debut >= datetime.now(),
+            )
+            .order_by(Seance.date_heure_debut)
+        )
+        return list(session.scalars(statement))
+
     today = date.today()
     if not today <= selected_date <= today + timedelta(days=6):
         return []

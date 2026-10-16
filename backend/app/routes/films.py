@@ -52,6 +52,16 @@ def admin_list_films(session: Session = Depends(get_db)) -> list[Film]:
     return get_all_films(session)
 
 
+@router.get("/admin/films/{id_film}", response_model=FilmDetailsResponse, dependencies=[Depends(require_admin)])
+def admin_film_details(id_film: int, session: Session = Depends(get_db)) -> FilmDetailsResponse:
+    film = get_film_details(session, id_film)
+
+    if film is None:
+        raise HTTPException(status_code=404, detail="Film introuvable")
+
+    return film
+
+
 @router.post("/admin/films", response_model=FilmResponse, status_code=201, dependencies=[Depends(require_admin)])
 def admin_create_film(film_data: FilmWrite, session: Session = Depends(get_db)) -> Film:
     return create_film(session, film_data)

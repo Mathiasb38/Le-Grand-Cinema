@@ -33,6 +33,18 @@ def test_admin_list_films(mock_admin_film_routes) -> None:
     assert response.json()[0]["titre"] == "Film test"
 
 
+def test_admin_film_details(mock_film_routes, monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="admin"),
+    )
+    response = TestClient(app).get("/admin/films/1")
+
+    assert response.status_code == 200
+    assert response.json()["seances"][0]["places_disponibles"] == 10
+
+
 def test_admin_create_film(mock_admin_film_routes) -> None:
     response = TestClient(app).post("/admin/films", json={
         "titre": "Film test",

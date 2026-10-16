@@ -42,6 +42,15 @@ def test_get_film_details(film_data) -> None:
     assert far_seance.id_seance not in result_ids
 
 
+def test_get_film_details_for_admin(film_data) -> None:
+    db_session, _, _, far_film, _, _, far_seance = film_data
+
+    result = get_film_details(db_session, far_film.id_film)
+
+    result_ids = [seance.id_seance for seance in result.seances]
+    assert far_seance.id_seance in result_ids
+
+
 def test_get_all_films(film_data) -> None:
     db_session, past_film, programmed_film, far_film, *_ = film_data
     result = get_all_films(db_session)
