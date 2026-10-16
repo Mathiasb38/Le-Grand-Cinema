@@ -5,9 +5,9 @@ from app.services.film_service import (
     create_film,
     update_film,
 )
-from app.schemas import FilmWrite, SeanceCreate
-from app.services.film_service import create_seance
-from app.models import Salle
+from app.schemas import FilmWrite, SeanceCreate, SeanceUpdate
+from app.services.film_service import create_seance, update_seance, delete_seance
+from app.models import Salle, Seance
 from sqlalchemy import select
 from datetime import datetime, timedelta
 
@@ -40,6 +40,15 @@ def test_get_film_details(film_data) -> None:
     result_ids = [seance.id_seance for seance in result.seances]
     assert past_seance.id_seance not in result_ids
     assert far_seance.id_seance not in result_ids
+
+
+def test_get_film_details_for_admin(film_data) -> None:
+    db_session, _, _, far_film, _, _, far_seance = film_data
+
+    result = get_film_details(db_session, far_film.id_film)
+
+    result_ids = [seance.id_seance for seance in result.seances]
+    assert far_seance.id_seance in result_ids
 
 
 def test_get_all_films(film_data) -> None:
@@ -92,6 +101,90 @@ def test_create_seance_rejects_overlapping_session(film_data) -> None:
 
     with pytest.raises(HTTPException) as error:
         create_seance(db_session, seance_data)
+
+    assert error.value.status_code == 409
+
+
+def test_update_seance(film_data) -> None:
+    db_session, _, _, _, _, _, seance = film_data
+    updated_data = SeanceUpdate(
+        id_salle=seance.id_salle,
+        date_heure_debut=datetime.now() + timedelta(days=9),
+    )
+
+    result = update_seance(db_session, seance.id_seance, updated_data)
+
+    assert result.date_heure_debut == updated_data.date_heure_debut
+
+
+def test_update_seance_rejects_past_session(film_data) -> None:
+    db_session, _, _, _, past_seance, _, _ = film_data
+    updated_data = SeanceUpdate(
+        id_salle=past_seance.id_salle,
+        date_heure_debut=datetime.now() + timedelta(days=1),
+    )
+
+    with pytest.raises(HTTPException) as error:
+        update_seance(db_session, past_seance.id_seance, updated_data)
+
+    assert error.value.status_code == 400
+
+
+def test_update_seance_rejects_reserved_session(film_data) -> None:
+    db_session, _, _, _, _, programmed_seance, _ = film_data
+    updated_data = SeanceUpdate(
+        id_salle=programmed_seance.id_salle,
+        date_heure_debut=datetime.now() + timedelta(days=2),
+    )
+
+    with pytest.raises(HTTPException) as error:
+        update_seance(db_session, programmed_seance.id_seance, updated_data)
+
+    assert error.value.status_code == 409
+
+
+def test_update_seance_rejects_occupied_room(film_data) -> None:
+    db_session, _, _, _, _, _, far_seance = film_data
+    other_seance = Seance(
+        date_heure_debut=datetime.now() + timedelta(days=3),
+        id_film=far_seance.id_film,
+        id_salle=far_seance.id_salle,
+    )
+    db_session.add(other_seance)
+    db_session.flush()
+    updated_data = SeanceUpdate(
+        id_salle=far_seance.id_salle,
+        date_heure_debut=other_seance.date_heure_debut + timedelta(minutes=30),
+    )
+
+    with pytest.raises(HTTPException) as error:
+        update_seance(db_session, far_seance.id_seance, updated_data)
+
+    assert error.value.status_code == 409
+
+
+def test_delete_seance(film_data) -> None:
+    db_session, _, _, _, _, _, far_seance = film_data
+
+    delete_seance(db_session, far_seance.id_seance)
+
+    assert db_session.get(Seance, far_seance.id_seance) is None
+
+
+def test_delete_seance_rejects_past_session(film_data) -> None:
+    db_session, _, _, _, past_seance, _, _ = film_data
+
+    with pytest.raises(HTTPException) as error:
+        delete_seance(db_session, past_seance.id_seance)
+
+    assert error.value.status_code == 400
+
+
+def test_delete_seance_rejects_reserved_session(film_data) -> None:
+    db_session, _, _, _, _, programmed_seance, _ = film_data
+
+    with pytest.raises(HTTPException) as error:
+        delete_seance(db_session, programmed_seance.id_seance)
 
     assert error.value.status_code == 409
 

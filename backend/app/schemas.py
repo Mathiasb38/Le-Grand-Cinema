@@ -38,6 +38,11 @@ class SeanceCreate(BaseModel):
     date_heure_debut: datetime
 
 
+class SeanceUpdate(BaseModel):
+    id_salle: int
+    date_heure_debut: datetime
+
+
 class SalleResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
