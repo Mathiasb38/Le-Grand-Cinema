@@ -1,4 +1,4 @@
-import { AlignJustify, User, X } from 'lucide-react'
+import { AlignJustify, User, X, CalendarDays } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../assets/logo.png'
@@ -19,6 +19,12 @@ function Header() {
       <nav className="header__nav" aria-label="Navigation principale">
         <Link className="header__link" to="/films">Films</Link>
       </nav>
+      {isAdmin && (
+        <Link className="button-gold header__admin-link" to="/admin/recherche">
+          <CalendarDays aria-hidden="true" />
+          Réservations
+        </Link>
+      )}
       {!isAdmin && isAuthenticated ? (
         <Link className="user-icon" to="/compte" aria-label="Mon compte">
           <User aria-hidden="true" />

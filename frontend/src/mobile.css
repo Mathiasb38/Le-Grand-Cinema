@@ -40,6 +40,19 @@
     align-items: stretch;
   }
 
+  .admin-search {
+    width: 100%;
+  }
+
+  .admin-search__form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-search__result {
+    flex-direction: column;
+  }
+
 }
 
 
@@ -63,6 +76,10 @@
 
   /* Header */
   .header__nav {
+    display: none;
+  }
+
+  .header__admin-link {
     display: none;
   }
 

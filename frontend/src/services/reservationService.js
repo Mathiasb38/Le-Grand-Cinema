@@ -26,3 +26,9 @@ export async function cancelReservation(reference, token) {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+export async function searchAdminReservations(search, token) {
+  return apiRequest(`/admin/recherche?search=${encodeURIComponent(search)}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
