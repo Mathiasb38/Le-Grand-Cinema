@@ -6,6 +6,7 @@ from app.services.reservation_service import (
     create_reservation,
     get_user_reservations,
     cancel_reservation,
+    search_reservations,
 )
 from sqlalchemy import select
 from app.models import Reservation
@@ -25,6 +26,7 @@ def test_create_reservation(reservation_data):
     assert all(item.id_seance == seance.id_seance for item in created)
 
     created_ids = {item.id_reservation for item in created}
+    assert len({item.reference for item in created}) == 2
     saved_ids = set(
         db_session.scalars(
             select(Reservation.id_reservation).where(
@@ -59,6 +61,51 @@ def test_get_user_reservations(reservations_data):
     assert result[0].nom_salle == "test"
     assert result[0].numero_salle == 666
 
+
+def test_search_reservations_by_reference(reservations_data):
+    db_session, _, seance, _ = reservations_data
+
+    result = search_reservations(db_session, "CLIENT")
+
+    assert len(result) == 1
+    assert result[0].reference == "RES-CLIENT"
+    assert result[0].email == "reservation@example.com"
+    assert result[0].titre_film == "Film test"
+    assert result[0].date_heure_debut == seance.date_heure_debut
+    assert result[0].nom_salle == "test"
+    assert result[0].numero_salle == 666
+    assert result[0].is_paid is False
+    assert result[0].is_cancelled is False
+
+
+@pytest.mark.parametrize(
+    ("reference", "is_paid", "is_cancelled"),
+    [("RES-PAID", True, False), ("RES-CANCELLED", False, True)],
+)
+def test_search_reservations_by_reference_status(
+    reservations_data,
+    reference,
+    is_paid,
+    is_cancelled,
+):
+    db_session, _, _, _ = reservations_data
+
+    result = search_reservations(db_session, reference)
+
+    assert result[0].is_paid is is_paid
+    assert result[0].is_cancelled is is_cancelled
+
+
+def test_search_reservations_by_email(reservations_data):
+    db_session, _, _, _ = reservations_data
+
+    result = search_reservations(db_session, "reservation@")
+
+    assert {reservation.reference for reservation in result} == {
+        "RES-CLIENT",
+        "RES-PAID",
+        "RES-CANCELLED",
+    }
 
 def test_cancel_reservation_frees_place(reservations_data):
     db_session, user, seance, places = reservations_data
