@@ -7,15 +7,29 @@ from app.schemas import (
     ReservationCreate,
     ReservationResponse,
     ReservationDetailsResponse,
+    ReservationAdminResponse,
 )
-from app.services.auth_service import get_current_user
+from app.services.auth_service import get_current_user, require_admin
 from app.services.reservation_service import (
     create_reservation,
     get_user_reservations,
     cancel_reservation,
+    search_reservations,
 )
 
 router = APIRouter()
+
+
+@router.get(
+    "/admin/recherche",
+    response_model=list[ReservationAdminResponse],
+    dependencies=[Depends(require_admin)],
+)
+def admin_search(
+    search: str,
+    session: Session = Depends(get_db),
+) -> list[ReservationAdminResponse]:
+    return search_reservations(session, search)
 
 
 @router.get("/reservations", response_model=list[ReservationDetailsResponse])

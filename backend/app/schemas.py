@@ -98,3 +98,14 @@ class ReservationDetailsResponse(BaseModel):
     date_heure_debut: datetime
     nom_salle: str
     numero_salle: int
+
+
+class ReservationAdminResponse(BaseModel):
+    reference: str
+    email: EmailStr
+    titre_film: str
+    date_heure_debut: datetime
+    nom_salle: str
+    numero_salle: int
+    is_paid: bool
+    is_cancelled: bool
