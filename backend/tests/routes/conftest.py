@@ -140,6 +140,28 @@ def mock_cancel_reservation_route(monkeypatch):
 
     return cancel_reservation, user
 
+
+@pytest.fixture
+def mock_admin_reservation_route(monkeypatch, mock_admin_route):
+    reservation = SimpleNamespace(
+        reference="RES-TEST",
+        email="client@example.com",
+        titre_film="Film test",
+        date_heure_debut=datetime(2027, 1, 1, 20, 30),
+        nom_salle="Salle principale",
+        numero_salle=1,
+        is_paid=False,
+        is_cancelled=False,
+    )
+    search_reservations = Mock(return_value=[reservation])
+
+    monkeypatch.setattr(
+        "app.routes.reservations.search_reservations",
+        search_reservations,
+    )
+
+    return search_reservations
+
 @pytest.fixture
 def mock_admin_route(monkeypatch):
     user = SimpleNamespace(id_utilisateur=1, role="admin")

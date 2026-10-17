@@ -10,6 +10,7 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Reservation from './pages/Reservation.jsx'
 import ClientAccount from './pages/ClientAccount.jsx'
+import AdminSearch from './pages/AdminSearch.jsx'
 
 export default App
 
@@ -29,12 +30,14 @@ function App() {
         } />
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
-        <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
         <Route path="/reservation/:idSeance" element={<Reservation />} />
         <Route path="/compte" element={<ClientAccount />} />
         <Route path="/connexion" element={<Login />} />
-        <Route path="/admin/connexion" element={<AdminLogin />} />
         <Route path="/inscription" element={<Register />} />
+        <Route path="/admin/connexion" element={<AdminLogin />} />
+        <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
+        <Route path="/admin/recherche" element={<AdminSearch />} />
+
       </Routes>
       <Footer />
     </div>

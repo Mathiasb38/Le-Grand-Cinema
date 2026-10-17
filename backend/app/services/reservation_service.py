@@ -2,11 +2,11 @@ from datetime import datetime
 from uuid import uuid4
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
 from app.models import Billet, Place, Reservation, Seance, Utilisateur, Film, Salle
-from app.schemas import ReservationCreate, ReservationDetailsResponse
+from app.schemas import ReservationCreate, ReservationDetailsResponse, ReservationAdminResponse
 
 
 def create_reservation(
@@ -95,6 +95,52 @@ def get_user_reservations(
             statement
         )
     ]
+
+
+def search_reservations(
+    session: Session,
+    search: str,
+) -> list[ReservationAdminResponse]:
+    statement = (
+        select(
+            Reservation.reference,
+            Utilisateur.email,
+            Film.titre,
+            Seance.date_heure_debut,
+            Salle.nom,
+            Salle.numero,
+            Reservation.is_paid,
+            Reservation.is_cancelled,
+        )
+        .join(Seance, Reservation.id_seance == Seance.id_seance)
+        .join(Film, Seance.id_film == Film.id_film)
+        .join(Utilisateur, Reservation.id_utilisateur == Utilisateur.id_utilisateur)
+        .join(Salle, Seance.id_salle == Salle.id_salle)
+        .where(
+            or_(
+                Reservation.reference.ilike(f"%{search}%"),
+                Utilisateur.email.ilike(f"%{search}%"),
+            )
+        )
+        .order_by(Seance.date_heure_debut)
+    )
+    reservations = []
+    for result in session.execute(statement):
+        reference, email, titre, date_heure_debut, nom_salle, numero_salle, is_paid, is_cancelled = result
+        reservations.append(
+            ReservationAdminResponse(
+                reference=reference,
+                email=email,
+                titre_film=titre,
+                date_heure_debut=date_heure_debut,
+                nom_salle=nom_salle,
+                numero_salle=numero_salle,
+                is_paid=is_paid,
+                is_cancelled=is_cancelled,
+            )
+        )
+
+    return reservations
 
 
 def cancel_reservation(session: Session, user: Utilisateur, reference: str) -> None:
