@@ -10,6 +10,7 @@ from app.schemas import (
     ReservationCreate,
     ReservationDetailsResponse,
     ReservationAdminResponse,
+    BilletResponse,
 )
 
 
@@ -101,6 +102,39 @@ def get_user_reservations(
     ]
 
 
+def get_user_billets(
+    session: Session,
+    user: Utilisateur,
+) -> list[BilletResponse]:
+    statement = (
+        select(
+            Billet.code_billet,
+            Film.titre,
+            Seance.date_heure_debut,
+            Salle.nom,
+            Salle.numero,
+        )
+        .join(Seance, Billet.id_seance == Seance.id_seance)
+        .join(Film, Seance.id_film == Film.id_film)
+        .join(Salle, Seance.id_salle == Salle.id_salle)
+        .where(
+            Billet.id_utilisateur == user.id_utilisateur,
+        )
+        .order_by(Seance.date_heure_debut)
+    )
+
+    return [
+        BilletResponse(
+            code_billet=code_billet,
+            titre_film=titre,
+            date_heure_debut=date_heure_debut,
+            nom_salle=nom_salle,
+            numero_salle=numero_salle,
+        )
+        for code_billet, titre, date_heure_debut, nom_salle, numero_salle in session.execute(statement)
+    ]
+
+
 def search_reservations(
     session: Session,
     search: str,
@@ -182,6 +216,7 @@ def validate_payment(session: Session, reference: str) -> None:
         date_emission=datetime.now(),
         id_place=reservation.id_place,
         id_seance=reservation.id_seance,
+        id_utilisateur=reservation.id_utilisateur,
     )
     reservation.is_paid = True
     session.add(billet)

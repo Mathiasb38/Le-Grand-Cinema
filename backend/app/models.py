@@ -103,3 +103,7 @@ class Billet(Base):
     date_emission: Mapped[datetime] = mapped_column(DateTime)
     id_place: Mapped[int] = mapped_column(ForeignKey("PLACE.id_place"))
     id_seance: Mapped[int] = mapped_column(ForeignKey("SEANCE.id_seance"))
+    id_utilisateur: Mapped[int | None] = mapped_column(
+        ForeignKey("UTILISATEUR.id_utilisateur"),
+        nullable=True,
+    )
