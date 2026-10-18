@@ -123,6 +123,34 @@ def mock_reservation_list_route(monkeypatch):
 
 
 @pytest.fixture
+def mock_billet_list_route(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="client")
+    billets = [
+        SimpleNamespace(
+            code_billet="BIL-TEST",
+            titre_film="Film test",
+            date_heure_debut=datetime(2027, 1, 1, 20, 30),
+            nom_salle="Salle principale",
+            numero_salle=1,
+        )
+    ]
+    get_user_billets = Mock(return_value=billets)
+
+    monkeypatch.setattr(
+        "app.routes.reservations.get_user_billets",
+        get_user_billets,
+    )
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: user,
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return get_user_billets
+
+
+@pytest.fixture
 def mock_cancel_reservation_route(monkeypatch):
     user = SimpleNamespace(id_utilisateur=1, role="client")
     cancel_reservation = Mock()

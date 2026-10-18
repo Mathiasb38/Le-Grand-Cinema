@@ -66,12 +66,14 @@ def film_data(db_session):
             date_emission=now,
             id_place=places[0].id_place,
             id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
         ),
         Billet(
             code_billet="TEST-2",
             date_emission=now,
             id_place=places[1].id_place,
             id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
         ),
         Reservation(
             reference="RES-1",

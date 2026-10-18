@@ -36,6 +36,22 @@ def test_list_reservations(mock_reservation_list_route):
     assert response.json()[0]["numero_salle"] == 666
 
 
+def test_list_billets(mock_billet_list_route):
+    response = TestClient(app).get("/billets")
+
+    assert response.status_code == 200
+    assert response.json()[0]["code_billet"] == "BIL-TEST"
+    assert response.json()[0]["titre_film"] == "Film test"
+    assert response.json()[0]["nom_salle"] == "Salle principale"
+    assert response.json()[0]["numero_salle"] == 1
+    mock_billet_list_route.assert_called_once()
+
+
+def test_list_billets_requires_authentication():
+    response = TestClient(app).get("/billets")
+
+    assert response.status_code == 401
+
 def test_admin_reservation_search_by_reference(mock_admin_reservation_route):
     response = TestClient(app).get("/admin/recherche?search=RES-TEST")
 
