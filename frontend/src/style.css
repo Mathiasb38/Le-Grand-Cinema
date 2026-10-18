@@ -393,7 +393,7 @@ a {
   gap: var(--spacing-component-padding);
 }
 
-.admin-search__status::before {
+.status-badge::before {
   content: '';
   width: 10px;
   height: 10px;
@@ -401,7 +401,7 @@ a {
   background: var(--color-success);
 }
 
-.admin-search__status--cancelled::before {
+.status-badge--cancelled::before {
   background: var(--color-danger);
 }
 
@@ -780,12 +780,11 @@ a {
 /* Espace client */
 .client-account {
   display: flex;
+  flex-direction: column;
   padding: var(--spacing-component-padding);
 }
 
-.client-reservations {
-  flex: 1;
-}
+
 
 .client-reservations__list {
   display: flex;

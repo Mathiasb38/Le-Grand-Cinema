@@ -109,3 +109,11 @@ class ReservationAdminResponse(BaseModel):
     numero_salle: int
     is_paid: bool
     is_cancelled: bool
+
+
+class BilletResponse(BaseModel):
+    code_billet: str
+    titre_film: str
+    date_heure_debut: datetime
+    nom_salle: str
+    numero_salle: int

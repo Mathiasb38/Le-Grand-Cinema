@@ -8,6 +8,7 @@ from app.schemas import (
     ReservationResponse,
     ReservationDetailsResponse,
     ReservationAdminResponse,
+    BilletResponse,
 )
 from app.services.auth_service import get_current_user, require_admin
 from app.services.reservation_service import (
@@ -16,6 +17,7 @@ from app.services.reservation_service import (
     cancel_reservation,
     search_reservations,
     validate_payment,
+    get_user_billets,
 )
 
 router = APIRouter()
@@ -56,6 +58,17 @@ def list_reservations(
         )
 
     return get_user_reservations(session, current_user)
+
+
+@router.get("/billets", response_model=list[BilletResponse])
+def list_billets(
+    current_user: Utilisateur = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[BilletResponse]:
+    if current_user.role != "client":
+        raise HTTPException(status_code=403, detail="Billets réservés aux clients")
+
+    return get_user_billets(session, current_user)
 
 
 @router.post(

@@ -8,6 +8,7 @@ from app.services.reservation_service import (
     cancel_reservation,
     search_reservations,
     validate_payment,
+    get_user_billets,
 )
 from sqlalchemy import select
 from app.models import Billet, Reservation
@@ -57,6 +58,40 @@ def test_get_user_reservations(reservations_data):
     result = get_user_reservations(db_session, user)
 
     assert [item.reference for item in result] == ["RES-CLIENT"]
+    assert result[0].titre_film == "Film test"
+    assert result[0].date_heure_debut == seance.date_heure_debut
+    assert result[0].nom_salle == "test"
+    assert result[0].numero_salle == 666
+
+
+def test_get_user_billets_returns_only_user_paid_tickets(reservations_data):
+    db_session, user, seance, places = reservations_data
+    other_reservation = db_session.scalar(
+        select(Reservation).where(Reservation.reference == "RES-OTHER")
+    )
+    other_reservation.is_paid = True
+    db_session.add_all([
+        Billet(
+            code_billet="BIL-CLIENT",
+            date_emission=datetime.now(),
+            id_seance=seance.id_seance,
+            id_place=places[1].id_place,
+            id_utilisateur=user.id_utilisateur,
+        ),
+        Billet(
+            code_billet="BIL-OTHER",
+            date_emission=datetime.now(),
+            id_seance=seance.id_seance,
+            id_place=places[3].id_place,
+            id_utilisateur=other_reservation.id_utilisateur,
+        ),
+    ])
+    db_session.flush()
+
+    result = get_user_billets(db_session, user)
+
+    assert len(result) == 1
+    assert result[0].code_billet == "BIL-CLIENT"
     assert result[0].titre_film == "Film test"
     assert result[0].date_heure_debut == seance.date_heure_debut
     assert result[0].nom_salle == "test"

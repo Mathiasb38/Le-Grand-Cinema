@@ -6,6 +6,12 @@ export async function getUserReservations(token) {
   })
 }
 
+export async function getUserBillets(token) {
+  return apiRequest('/billets', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 export async function createReservation(idSeance, nombrePlaces, token) {
   return apiRequest('/reservations', {
     method: 'POST',
