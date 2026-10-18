@@ -143,6 +143,18 @@ def test_validate_payment_rejects_ineligible_reservation(
 
     assert error.value.status_code == status_code
 
+
+def test_validate_payment_rejects_past_session(reservations_data):
+    db_session, _, seance, _ = reservations_data
+    seance.date_heure_debut = datetime.now()
+    db_session.flush()
+
+    with pytest.raises(HTTPException) as error:
+        validate_payment(db_session, "RES-CLIENT")
+
+    assert error.value.status_code == 409
+
+
 def test_cancel_reservation_frees_place(reservations_data):
     db_session, user, seance, places = reservations_data
     reservation = db_session.scalar(

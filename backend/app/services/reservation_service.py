@@ -6,7 +6,11 @@ from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
 from app.models import Billet, Place, Reservation, Seance, Utilisateur, Film, Salle
-from app.schemas import ReservationCreate, ReservationDetailsResponse, ReservationAdminResponse
+from app.schemas import (
+    ReservationCreate,
+    ReservationDetailsResponse,
+    ReservationAdminResponse,
+)
 
 
 def create_reservation(
@@ -126,7 +130,16 @@ def search_reservations(
     )
     reservations = []
     for result in session.execute(statement):
-        reference, email, titre, date_heure_debut, nom_salle, numero_salle, is_paid, is_cancelled = result
+        (
+            reference,
+            email,
+            titre,
+            date_heure_debut,
+            nom_salle,
+            numero_salle,
+            is_paid,
+            is_cancelled,
+        ) = result
         reservations.append(
             ReservationAdminResponse(
                 reference=reference,
@@ -152,6 +165,13 @@ def validate_payment(session: Session, reference: str) -> None:
         raise HTTPException(status_code=404, detail="Réservation introuvable")
 
     if reservation.is_paid or reservation.is_cancelled:
+        raise HTTPException(
+            status_code=409,
+            detail="Paiement impossible",
+        )
+
+    seance = session.get(Seance, reservation.id_seance)
+    if seance.date_heure_debut <= datetime.now():
         raise HTTPException(
             status_code=409,
             detail="Paiement impossible",
