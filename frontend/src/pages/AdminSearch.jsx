@@ -116,7 +116,7 @@ function AdminSearch() {
                   </p>
                 </div>
                 <div className="admin-search__actions">
-                  <span className={`admin-search__status button-black${reservation.is_cancelled ? ' admin-search__status--cancelled' : ''}`}>
+                  <span className={`status-badge button-black${reservation.is_cancelled ? ' status-badge--cancelled' : ''}`}>
                     {status}
                   </span>
                   {!reservation.is_paid && !reservation.is_cancelled && (

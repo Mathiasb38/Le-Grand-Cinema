@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../context/AuthContext.jsx'
-import { getUserReservations, cancelReservation } from '../services/reservationService.js'
+import { getUserReservations, cancelReservation, getUserBillets } from '../services/reservationService.js'
 import ClientReservation from '../components/groups/ClientReservation.jsx'
 import Modal from '../components/sections/Modal.jsx'
+import ClientBillet from '../components/groups/ClientBillet.jsx'
 
 export default ClientAccount
 
@@ -12,6 +13,7 @@ function ClientAccount() {
   const { isAuthenticated, token } = useAuth()
   const navigate = useNavigate()
   const [reservations, setReservations] = useState([])
+  const [billets, setBillets] = useState([])
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isCancelling, setIsCancelling] = useState(false)
@@ -25,7 +27,12 @@ function ClientAccount() {
 
     async function loadReservations() {
       try {
-        setReservations(await getUserReservations(token))
+        const [userReservations, userBillets] = await Promise.all([
+          getUserReservations(token),
+          getUserBillets(token),
+        ])
+        setReservations(userReservations)
+        setBillets(userBillets)
       } catch (error) {
         setError(error.message)
       } finally {
@@ -92,6 +99,23 @@ function ClientAccount() {
             </p>
           )}
         </section>
+
+        {!isLoading && !error && (
+          <section className="client-billets" aria-labelledby="billets-title">
+            <h2 className="titre" id="billets-title">Billets</h2>
+            {billets.length ? (
+              <ul className="client-reservations__list">
+                {billets.map((billet) => (
+                  <ClientBillet key={billet.code_billet} billet={billet} />
+                ))}
+              </ul>
+            ) : (
+              <p className="client-reservations__message principal">
+                Vous n'avez aucun billet.
+              </p>
+            )}
+          </section>
+        )}
       </section>
       {modal && (
         <Modal
