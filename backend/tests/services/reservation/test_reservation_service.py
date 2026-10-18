@@ -7,9 +7,10 @@ from app.services.reservation_service import (
     get_user_reservations,
     cancel_reservation,
     search_reservations,
+    validate_payment,
 )
 from sqlalchemy import select
-from app.models import Reservation
+from app.models import Billet, Reservation
 from datetime import datetime
 
 
@@ -106,6 +107,41 @@ def test_search_reservations_by_email(reservations_data):
         "RES-PAID",
         "RES-CANCELLED",
     }
+
+
+def test_validate_payment_marks_reservation_paid_and_creates_ticket(reservations_data):
+    db_session, _, _, _ = reservations_data
+
+    validate_payment(db_session, "RES-CLIENT")
+
+    reservation = db_session.scalar(
+        select(Reservation).where(Reservation.reference == "RES-CLIENT")
+    )
+    billet = db_session.scalar(
+        select(Billet).where(
+            Billet.id_place == reservation.id_place,
+            Billet.id_seance == reservation.id_seance,
+        )
+    )
+
+    assert reservation.is_paid is True
+    assert billet is not None
+    assert billet.code_billet.startswith("BIL-")
+
+
+@pytest.mark.parametrize(
+    ("reference", "status_code"),
+    [("RES-PAID", 409), ("RES-CANCELLED", 409), ("RES-UNKNOWN", 404)],
+)
+def test_validate_payment_rejects_ineligible_reservation(
+    reservations_data, reference, status_code
+):
+    db_session, _, _, _ = reservations_data
+
+    with pytest.raises(HTTPException) as error:
+        validate_payment(db_session, reference)
+
+    assert error.value.status_code == status_code
 
 def test_cancel_reservation_frees_place(reservations_data):
     db_session, user, seance, places = reservations_data
