@@ -32,3 +32,10 @@ export async function searchAdminReservations(search, token) {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+export async function validateAdminPayment(reference, token) {
+  return apiRequest(`/admin/reservations/${encodeURIComponent(reference)}/paiement`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}

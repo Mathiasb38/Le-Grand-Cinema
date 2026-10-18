@@ -65,6 +65,28 @@ def test_admin_reservation_search_requires_admin(mock_admin_reservation_route, m
     assert response.status_code == 403
 
 
+def test_admin_validate_payment(mock_validate_payment_route):
+    response = TestClient(app).put(
+        "/admin/reservations/RES-TEST/paiement"
+    )
+
+    assert response.status_code == 204
+    mock_validate_payment_route.assert_called_once_with(None, "RES-TEST")
+
+
+def test_admin_validate_payment_requires_admin(mock_validate_payment_route, monkeypatch):
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).put(
+        "/admin/reservations/RES-TEST/paiement"
+    )
+
+    assert response.status_code == 403
+
+
 def test_cancel_reservation(mock_cancel_reservation_route):
     cancel_reservation, _ = mock_cancel_reservation_route
     response = TestClient(app).delete("/reservations/RES-TEST")

@@ -6,7 +6,11 @@ from sqlalchemy import select, or_
 from sqlalchemy.orm import Session
 
 from app.models import Billet, Place, Reservation, Seance, Utilisateur, Film, Salle
-from app.schemas import ReservationCreate, ReservationDetailsResponse, ReservationAdminResponse
+from app.schemas import (
+    ReservationCreate,
+    ReservationDetailsResponse,
+    ReservationAdminResponse,
+)
 
 
 def create_reservation(
@@ -126,7 +130,16 @@ def search_reservations(
     )
     reservations = []
     for result in session.execute(statement):
-        reference, email, titre, date_heure_debut, nom_salle, numero_salle, is_paid, is_cancelled = result
+        (
+            reference,
+            email,
+            titre,
+            date_heure_debut,
+            nom_salle,
+            numero_salle,
+            is_paid,
+            is_cancelled,
+        ) = result
         reservations.append(
             ReservationAdminResponse(
                 reference=reference,
@@ -141,6 +154,38 @@ def search_reservations(
         )
 
     return reservations
+
+
+def validate_payment(session: Session, reference: str) -> None:
+    reservation = session.scalar(
+        select(Reservation).where(Reservation.reference == reference)
+    )
+
+    if reservation is None:
+        raise HTTPException(status_code=404, detail="Réservation introuvable")
+
+    if reservation.is_paid or reservation.is_cancelled:
+        raise HTTPException(
+            status_code=409,
+            detail="Paiement impossible",
+        )
+
+    seance = session.get(Seance, reservation.id_seance)
+    if seance.date_heure_debut <= datetime.now():
+        raise HTTPException(
+            status_code=409,
+            detail="Paiement impossible",
+        )
+
+    billet = Billet(
+        code_billet=f"BIL-{uuid4().hex[:12].upper()}",
+        date_emission=datetime.now(),
+        id_place=reservation.id_place,
+        id_seance=reservation.id_seance,
+    )
+    reservation.is_paid = True
+    session.add(billet)
+    session.commit()
 
 
 def cancel_reservation(session: Session, user: Utilisateur, reference: str) -> None:

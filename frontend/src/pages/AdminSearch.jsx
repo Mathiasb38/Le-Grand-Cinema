@@ -1,7 +1,8 @@
-import { Search } from 'lucide-react'
+import { Search, Check } from 'lucide-react'
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { searchAdminReservations } from '../services/reservationService.js'
+import { searchAdminReservations, validateAdminPayment } from '../services/reservationService.js'
+import Modal from '../components/sections/Modal.jsx'
 
 export default AdminSearch
 
@@ -12,6 +13,8 @@ function AdminSearch() {
   const [search, setSearch] = useState('')
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [confirmation, setConfirmation] = useState(null)
+  const [isPaymentLoading, setIsPaymentLoading] = useState(false)
 
   async function handleSearch(event) {
     event.preventDefault()
@@ -32,6 +35,23 @@ function AdminSearch() {
       setReservations([])
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  async function handlePayment() {
+    setIsPaymentLoading(true)
+    setError(null)
+
+    try {
+      await validateAdminPayment(confirmation, token)
+      setReservations((items) => items.map((item) => (
+        item.reference === confirmation ? { ...item, is_paid: true } : item
+      )))
+      setConfirmation(null)
+    } catch (error) {
+      setError(error.message)
+    } finally {
+      setIsPaymentLoading(false)
     }
   }
 
@@ -99,12 +119,33 @@ function AdminSearch() {
                   <span className={`admin-search__status button-black${reservation.is_cancelled ? ' admin-search__status--cancelled' : ''}`}>
                     {status}
                   </span>
+                  {!reservation.is_paid && !reservation.is_cancelled && (
+                    <button
+                      className="button-gold admin-search__payment"
+                      type="button"
+                      onClick={() => setConfirmation(reservation.reference)}
+                      disabled={date <= new Date()}
+                    >
+                      Valider le paiement
+                      <Check aria-hidden="true" />
+                    </button>
+                  )}
                 </div>
               </article>
             )
           })}
         </div>
       </section>
+      {confirmation && (
+        <Modal
+          type="validation"
+          message={`Valider le paiement de ${confirmation} ?`}
+          onConfirm={handlePayment}
+          onCancel={() => setConfirmation(null)}
+          onClose={() => setConfirmation(null)}
+          isLoading={isPaymentLoading}
+        />
+      )}
     </main>
   )
 }

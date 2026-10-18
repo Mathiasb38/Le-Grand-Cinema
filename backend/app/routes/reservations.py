@@ -15,6 +15,7 @@ from app.services.reservation_service import (
     get_user_reservations,
     cancel_reservation,
     search_reservations,
+    validate_payment,
 )
 
 router = APIRouter()
@@ -30,6 +31,18 @@ def admin_search(
     session: Session = Depends(get_db),
 ) -> list[ReservationAdminResponse]:
     return search_reservations(session, search)
+
+
+@router.put(
+    "/admin/reservations/{reference}/paiement",
+    status_code=204,
+    dependencies=[Depends(require_admin)],
+)
+def admin_validate_payment(
+    reference: str,
+    session: Session = Depends(get_db),
+) -> None:
+    validate_payment(session, reference)
 
 
 @router.get("/reservations", response_model=list[ReservationDetailsResponse])

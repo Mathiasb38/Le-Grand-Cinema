@@ -162,6 +162,17 @@ def mock_admin_reservation_route(monkeypatch, mock_admin_route):
 
     return search_reservations
 
+
+@pytest.fixture
+def mock_validate_payment_route(monkeypatch, mock_admin_route):
+    validate_payment = Mock()
+    monkeypatch.setattr(
+        "app.routes.reservations.validate_payment",
+        validate_payment,
+    )
+
+    return validate_payment
+
 @pytest.fixture
 def mock_admin_route(monkeypatch):
     user = SimpleNamespace(id_utilisateur=1, role="admin")
