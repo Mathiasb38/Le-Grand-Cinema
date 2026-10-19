@@ -40,6 +40,29 @@ def mock_film_routes(monkeypatch):
 
 
 @pytest.fixture
+def mock_seance_places_route(monkeypatch):
+    user = SimpleNamespace(id_utilisateur=1, role="client")
+    places = [
+        SimpleNamespace(id_place=1, rangee="A", numero=1, disponible=True),
+        SimpleNamespace(id_place=2, rangee="A", numero=2, disponible=False),
+    ]
+    get_seance_places = Mock(return_value=places)
+
+    monkeypatch.setattr(
+        "app.routes.films.get_seance_places",
+        get_seance_places,
+    )
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: user,
+    )
+    monkeypatch.setitem(app.dependency_overrides, get_db, lambda: None)
+
+    return get_seance_places
+
+
+@pytest.fixture
 def mock_auth_route(monkeypatch):
     user = SimpleNamespace(
         id_utilisateur=1,

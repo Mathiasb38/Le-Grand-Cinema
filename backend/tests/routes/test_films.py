@@ -26,6 +26,29 @@ def test_film_seances(mock_film_routes) -> None:
     assert response.json()[0]["places_disponibles"] == 10
 
 
+def test_seance_places(mock_seance_places_route) -> None:
+    response = TestClient(app).get("/seances/1/places")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"id_place": 1, "rangee": "A", "numero": 1, "disponible": True},
+        {"id_place": 2, "rangee": "A", "numero": 2, "disponible": False},
+    ]
+    mock_seance_places_route.assert_called_once_with(None, 1)
+
+
+def test_seance_places_requires_client(mock_seance_places_route, monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="admin"),
+    )
+
+    response = TestClient(app).get("/seances/1/places")
+
+    assert response.status_code == 403
+
+
 def test_admin_list_films(mock_admin_film_routes) -> None:
     response = TestClient(app).get("/admin/films")
 
