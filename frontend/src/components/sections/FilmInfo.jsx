@@ -20,6 +20,7 @@ function FilmInfo({ film }) {
         key={film.id_film}
         idFilm={film.id_film}
         sessions={film.seances}
+      film={film}
       />
     </section>
   )

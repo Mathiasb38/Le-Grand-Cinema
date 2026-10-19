@@ -7,6 +7,7 @@ from app.services.film_service import (
 )
 from app.schemas import FilmWrite, SeanceCreate, SeanceUpdate
 from app.services.film_service import create_seance, update_seance, delete_seance
+from app.services.film_service import get_seance_places
 from app.models import Salle, Seance
 from sqlalchemy import select
 from datetime import datetime, timedelta
@@ -49,6 +50,18 @@ def test_get_film_details_for_admin(film_data) -> None:
 
     result_ids = [seance.id_seance for seance in result.seances]
     assert far_seance.id_seance in result_ids
+
+
+def test_get_seance_places_marks_unavailable_places(film_data) -> None:
+    db_session, _, _, _, _, programmed_seance, _ = film_data
+
+    result = get_seance_places(db_session, programmed_seance.id_seance)
+
+    assert [place.disponible for place in result] == [False, False, False, False, True]
+
+
+def test_get_seance_places_returns_none_for_unknown_session(db_session) -> None:
+    assert get_seance_places(db_session, 999) is None
 
 
 def test_get_all_films(film_data) -> None:
