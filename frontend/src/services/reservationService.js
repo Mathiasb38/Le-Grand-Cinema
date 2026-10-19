@@ -12,7 +12,7 @@ export async function getUserBillets(token) {
   })
 }
 
-export async function createReservation(idSeance, nombrePlaces, token) {
+export async function createReservation(idSeance, idPlaces, token) {
   return apiRequest('/reservations', {
     method: 'POST',
     headers: {
@@ -21,7 +21,7 @@ export async function createReservation(idSeance, nombrePlaces, token) {
     },
     body: JSON.stringify({
       id_seance: Number(idSeance),
-      nombre_places: nombrePlaces,
+      id_places: idPlaces,
     }),
   })
 }

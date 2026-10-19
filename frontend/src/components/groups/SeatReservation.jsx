@@ -1,23 +1,30 @@
 import { useRef, useState } from 'react'
+import { X } from 'lucide-react'
 
 export default SeatReservation
 
-function SeatReservation({ film, session, places = [], readOnly = false, children }) {
-  const [selectedIds, setSelectedIds] = useState([])
+function SeatReservation({
+  film,
+  session,
+  places = [],
+  selectedIds,
+  onSelectionChange,
+  isLoading = false,
+  children,
+}) {
   const [isZoomed, setIsZoomed] = useState(false)
   const scrollRef = useRef(null)
   const rows = [...new Set(places.map((place) => place.rangee))].sort()
   const columns = [...new Set(places.map((place) => place.numero))].sort((a, b) => a - b)
-  const selectedPlaces = places.filter((place) => place.disponible && selectedIds.includes(place.id_place))
+  const selectedPlaces = places.filter(
+    (place) => place.disponible && selectedIds.includes(place.id_place),
+  )
   const date = new Date(session.date_heure_debut)
 
   function togglePlace(id) {
-    if (readOnly) return
-
-    setSelectedIds((ids) => ids.includes(id)
-      ? ids.filter((selectedId) => selectedId !== id)
-      : [...ids, id])
-    setIsZoomed(false)
+    onSelectionChange(selectedIds.includes(id)
+      ? selectedIds.filter((selectedId) => selectedId !== id)
+      : [...selectedIds, id])
   }
 
   return (
@@ -66,7 +73,7 @@ function SeatReservation({ film, session, places = [], readOnly = false, childre
                               type="button"
                               aria-label={`Place ${row}${number}${!place.disponible ? ', indisponible' : ''}`}
                               aria-pressed={selected}
-                              disabled={!place.disponible || readOnly}
+                              disabled={!place.disponible || isLoading}
                               onClick={() => togglePlace(place.id_place)}
                             />
                           </td>
@@ -78,7 +85,7 @@ function SeatReservation({ film, session, places = [], readOnly = false, childre
               </table>
               <ul className="seat-reservation__legend petit" aria-label="Légende des places">
                 <li><span className="seat-reservation__seat" aria-hidden="true" />Place disponible</li>
-                {!readOnly && <li><span className="seat-reservation__seat seat-reservation__seat--selected" aria-hidden="true" />Place sélectionnée</li>}
+                <li><span className="seat-reservation__seat seat-reservation__seat--selected" aria-hidden="true" />Place sélectionnée</li>
                 <li><span className="seat-reservation__seat seat-reservation__seat--unavailable" aria-hidden="true" />Place indisponible</li>
               </ul>
             </div>
@@ -110,13 +117,22 @@ function SeatReservation({ film, session, places = [], readOnly = false, childre
           </time>
         </p>
         <p className="secondaire">{session.nom_salle} - Salle {session.numero_salle}</p>
-        {!readOnly && (
-          <ul className="seat-reservation__selection" aria-label="Places sélectionnées" aria-live="polite">
-            {selectedPlaces.map((place) => (
-              <li key={place.id_place}>{place.rangee}{place.numero}</li>
-            ))}
-          </ul>
-        )}
+        <ul className="seat-reservation__selection" aria-label="Places sélectionnées" aria-live="polite">
+          {selectedPlaces.map((place) => (
+            <li key={place.id_place}>
+              <button
+                className="button-black seat-reservation__chip"
+                type="button"
+                aria-label={`Retirer la place ${place.rangee}${place.numero}`}
+                disabled={isLoading}
+                onClick={() => togglePlace(place.id_place)}
+              >
+                {place.rangee}{place.numero}
+                <X aria-hidden="true" />
+              </button>
+            </li>
+          ))}
+        </ul>
         {children}
       </div>
     </div>
