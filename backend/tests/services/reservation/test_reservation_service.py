@@ -16,16 +16,23 @@ from datetime import datetime
 
 
 def test_create_reservation(reservation_data):
-    db_session, user, seance, _ = reservation_data
+    db_session, user, seance, places = reservation_data
 
     created = create_reservation(
         db_session,
         user,
-        ReservationCreate(id_seance=seance.id_seance, nombre_places=2),
+        ReservationCreate(
+            id_seance=seance.id_seance,
+            id_places=[places[0].id_place, places[1].id_place],
+        ),
     )
 
     assert len(created) == 2
     assert all(item.id_seance == seance.id_seance for item in created)
+    assert {item.id_place for item in created} == {
+        places[0].id_place,
+        places[1].id_place,
+    }
 
     created_ids = {item.id_reservation for item in created}
     assert len({item.reference for item in created}) == 2
@@ -47,7 +54,7 @@ def test_create_reservation_rejects(reservation_data):
         create_reservation(
             db_session,
             user,
-            ReservationCreate(id_seance=seance.id_seance, nombre_places=101),
+            ReservationCreate(id_seance=seance.id_seance, id_places=[101]),
         )
 
     assert error.value.status_code == 409
@@ -200,7 +207,7 @@ def test_cancel_reservation_frees_place(reservations_data):
     created = create_reservation(
         db_session,
         user,
-        ReservationCreate(id_seance=seance.id_seance, nombre_places=1),
+        ReservationCreate(id_seance=seance.id_seance, id_places=[places[0].id_place]),
     )
 
     assert reservation.is_cancelled is True

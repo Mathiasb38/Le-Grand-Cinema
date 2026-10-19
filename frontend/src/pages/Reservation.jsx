@@ -15,7 +15,7 @@ function Reservation() {
   const { state: session } = useLocation()
   const navigate = useNavigate()
   const { isAuthenticated, token } = useAuth()
-  const [nombrePlaces, setNombrePlaces] = useState(1)
+  const [selectedPlaceIds, setSelectedPlaceIds] = useState([])
   const [modal, setModal] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [places, setPlaces] = useState([])
@@ -46,7 +46,17 @@ function Reservation() {
     setIsLoading(true)
 
     try {
-      await createReservation(idSeance, nombrePlaces, token)
+      await createReservation(idSeance, selectedPlaceIds, token)
+      setSelectedPlaceIds([])
+      try {
+        setPlaces(await getSeancePlaces(idSeance, token))
+      } catch {
+        setModal({
+          type: 'confirmation',
+          message: 'Réservation confirmée, mais le plan n’a pas pu être actualisé. Rechargez la page.',
+        })
+        return
+      }
       setModal({
         type: 'confirmation',
         message: 'Votre réservation a été confirmée.',
@@ -70,25 +80,12 @@ function Reservation() {
             film={{ titre: session.titreFilm }}
             session={session}
             places={places}
-            readOnly
+            selectedIds={selectedPlaceIds}
+            onSelectionChange={setSelectedPlaceIds}
+            isLoading={isLoading}
           >
             <form className="reservation-form" onSubmit={handleSubmit}>
-              <label className="reservation-form__field petit" htmlFor="nombre-places">
-                Nombre de places
-                <input className="principal"
-                  id="nombre-places"
-                  type="number"
-                  min="1"
-                  max={session.places_disponibles}
-                  value={nombrePlaces}
-                  onChange={(event) => setNombrePlaces(Number(event.target.value))}
-                  required
-                />
-              </label>
-              <p className="muted">
-                {session.places_disponibles} places disponibles
-              </p>
-              <button className="button-gold" type="submit" disabled={isLoading}>
+              <button className="button-gold" type="submit" disabled={isLoading || selectedPlaceIds.length === 0}>
                 {isLoading ? 'Validation...' : 'Valider la réservation'}
                 <ArrowRight aria-hidden="true" />
               </button>

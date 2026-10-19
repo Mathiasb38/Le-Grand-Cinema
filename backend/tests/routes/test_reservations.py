@@ -6,19 +6,21 @@ from types import SimpleNamespace
 
 
 def test_create_reservation(mock_reservation_route):
+    create_reservation = mock_reservation_route
     response = TestClient(app).post(
         "/reservations",
-        json={"id_seance": 1, "nombre_places": 1},
+        json={"id_seance": 1, "id_places": [1]},
     )
 
     assert response.status_code == 201
     assert response.json()[0]["reference"] == "RES-TEST"
+    assert create_reservation.call_args.args[2].id_places == [1]
 
 
 def test_create_reservation_requires_authentication():
     response = TestClient(app).post(
         "/reservations",
-        json={"id_seance": 1, "nombre_places": 1},
+        json={"id_seance": 1, "id_places": [1]},
     )
 
     assert response.status_code == 401

@@ -80,7 +80,7 @@ class TokenResponse(BaseModel):
 
 class ReservationCreate(BaseModel):
     id_seance: int
-    nombre_places: int = Field(gt=0)
+    id_places: list[int] = Field(min_length=1)
 
 
 class ReservationResponse(BaseModel):
