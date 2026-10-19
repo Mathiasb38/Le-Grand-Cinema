@@ -665,7 +665,7 @@ a {
 }
 
 
-/* Catalogue films */
+/* commun */
 
 .catalog,
 .film-detail,
@@ -676,16 +676,12 @@ a {
   padding: var(--spacing-component-padding);
 }
 
-/* detail film */
 
 /* Reservation */
 .reservation-panel {
-  width: min(640px, 70%);
+  width: fit-content;
+  max-width: 100%;
   padding: var(--spacing-component-padding);
-}
-
-.reservation-panel__header {
-  text-align: center;
 }
 
 .reservation-form {
@@ -707,6 +703,123 @@ a {
   border: 1px solid var(--color-gold-primary);
   border-radius: 8px;
   background: var(--color-main);
+}
+
+/* Seat reservation */
+.seat-reservation {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--spacing-component-padding);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.seat-reservation__plan {
+  min-width: 0;
+}
+
+.seat-reservation__viewport {
+  position: relative;
+}
+
+.seat-reservation__scroll {
+  overflow-x: auto;
+}
+
+.seat-reservation__map-zoom {
+  display: none;
+}
+
+.seat-reservation__map {
+  width: max-content;
+}
+
+.seat-reservation__screen {
+  fill: none;
+  stroke: var(--color-text-primary);
+  filter: drop-shadow(0 3px 4px var(--color-gold-primary));
+}
+
+.seat-reservation__seats {
+  width: 100%;
+  border-spacing: 12px 3px;
+}
+
+.seat-reservation__seat {
+  display: block;
+  width: 24px;
+  height: 20px;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-muted);
+  border-radius: 4px;
+  background: transparent;
+}
+
+.seat-reservation__seat--selected {
+  border-color: var(--color-light);
+  background: var(--color-light);
+}
+
+.seat-reservation__seat--unavailable {
+  background: var(--color-muted);
+}
+
+.seat-reservation__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--spacing-component-padding);
+  width: 100%;
+  padding: 0;
+  list-style: none;
+}
+
+.seat-reservation__legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-icon-label);
+}
+
+.seat-reservation__summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-component-padding);
+}
+
+.seat-reservation__summary p {
+  margin: 0;
+}
+
+.seat-reservation__summary .reservation-form {
+  flex: 1;
+  align-items: flex-start;
+  margin: 0;
+  width: 100%;
+}
+
+.seat-reservation__summary .reservation-form .button-black {
+  align-self: center;
+  margin-top: auto;
+}
+
+.seat-reservation__selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-component-padding);
+  padding: 0;
+  list-style: none;
+}
+
+button.seat-reservation__seat:hover:not(:disabled),
+.seat-reservation__seat:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+.seat-reservation button:disabled {
+  cursor: not-allowed;
 }
 
 /* Auth */

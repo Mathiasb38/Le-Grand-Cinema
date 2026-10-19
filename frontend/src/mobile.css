@@ -53,6 +53,16 @@
     flex-direction: column;
   }
 
+  .seat-reservation {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .seat-reservation__plan,
+  .seat-reservation__summary {
+    flex-basis: auto;
+  }
+
 }
 
 
@@ -178,6 +188,46 @@
   .reservation-panel {
     width: 100%;
     padding: 16px;
+  }
+
+  .seat-reservation {
+    width: 100%;
+  }
+
+  .seat-reservation__map-zoom {
+    display: block;
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__map {
+    width: 100%;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats {
+    table-layout: fixed;
+    border-spacing: 2px;
+    font-size: 9px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats thead th {
+    padding-bottom: 8px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats .seat-reservation__seat {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 5;
+    border-radius: 2px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__screen {
+    width: calc(100% - 16px);
+    height: 24px;
+    margin: 0 0 8px 16px;
   }
 
   /* Auth */

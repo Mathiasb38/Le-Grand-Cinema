@@ -32,6 +32,12 @@ export async function getFilmSessions(idFilm, date) {
   return response.json()
 }
 
+export async function getSeancePlaces(idSeance, token) {
+  return apiRequest(`/seances/${idSeance}/places`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
 export async function getAdminFilms(token) {
   return apiRequest('/admin/films', {
     headers: { Authorization: `Bearer ${token}` },

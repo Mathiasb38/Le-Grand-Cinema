@@ -7,7 +7,7 @@ import { scrollCards, formatDate, getDateKey, getNextDates } from '../../utils/h
 
 export default SessionList
 
-function SessionList({ idFilm, sessions }) {
+function SessionList({ idFilm, sessions, film }) {
   const cardsRef = useRef(null)
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
@@ -33,7 +33,7 @@ function SessionList({ idFilm, sessions }) {
       return
     }
 
-    navigate(`/reservation/${session.id_seance}`, {state: { ...session, idFilm }})
+    navigate(`/reservation/${session.id_seance}`, {state: { ...session, idFilm, titreFilm: film.titre }})
   }
 
   return (
