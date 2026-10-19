@@ -3,8 +3,8 @@ from datetime import datetime, timedelta, date, time
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
-from app.models import Film, Seance, Reservation, Salle, Billet
-from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite, SeanceCreate, SeanceUpdate
+from app.models import Film, Seance, Reservation, Salle, Billet, Place
+from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite, SeanceCreate, SeanceUpdate, PlaceResponse
 from fastapi import HTTPException
 
 
@@ -79,6 +79,42 @@ def get_available_places(session: Session, seance: Seance) -> int:
 
     capacity, occupied_places, reserved_places = session.execute(statement).one()
     return max(capacity - occupied_places - reserved_places, 0)
+
+
+def get_seance_places(
+    session: Session,
+    id_seance: int,
+) -> list[PlaceResponse] | None:
+    seance = session.get(Seance, id_seance)
+
+    if seance is None:
+        return None
+
+    places = session.scalars(
+        select(Place)
+        .where(Place.id_salle == seance.id_salle)
+        .order_by(Place.rangee, Place.numero)
+    ).all()
+    occupied_place_ids = set(session.scalars(
+        select(Billet.id_place).where(Billet.id_seance == id_seance)
+    ))
+    reserved_place_ids = set(session.scalars(
+        select(Reservation.id_place).where(
+            Reservation.id_seance == id_seance,
+            Reservation.is_cancelled.is_(False),
+        )
+    ))
+    unavailable_place_ids = occupied_place_ids | reserved_place_ids
+
+    return [
+        PlaceResponse(
+            id_place=place.id_place,
+            rangee=place.rangee,
+            numero=place.numero,
+            disponible=place.id_place not in unavailable_place_ids,
+        )
+        for place in places
+    ]
 
 
 def get_film_seances(

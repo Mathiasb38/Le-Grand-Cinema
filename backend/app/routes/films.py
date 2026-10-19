@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Film, Salle
-from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse, FilmWrite, SeanceCreate, SalleResponse, SeanceUpdate
+from app.models import Film, Salle, Utilisateur
+from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse, FilmWrite, SeanceCreate, SalleResponse, SeanceUpdate, PlaceResponse
 from app.services.film_service import (
     get_film_details,
     get_programmed_films,
@@ -16,8 +16,9 @@ from app.services.film_service import (
     get_all_salles,
     update_seance,
     delete_seance,
+    get_seance_places,
 )
-from app.services.auth_service import require_admin
+from app.services.auth_service import require_admin, get_current_user
 
 router = APIRouter()
 
@@ -45,6 +46,22 @@ def film_seances(id_film: int, date: date, session: Session = Depends(get_db)) -
         raise HTTPException(status_code=404, detail="Film introuvable")
 
     return film.seances
+
+
+@router.get("/seances/{id_seance}/places", response_model=list[PlaceResponse])
+def seance_places(
+    id_seance: int,
+    current_user: Utilisateur = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[PlaceResponse]:
+    if current_user.role != "client":
+        raise HTTPException(status_code=403, detail="Accès réservé aux clients")
+
+    places = get_seance_places(session, id_seance)
+    if places is None:
+        raise HTTPException(status_code=404, detail="Séance introuvable")
+
+    return places
 
 
 @router.get("/admin/films", response_model=list[FilmResponse], dependencies=[Depends(require_admin)])

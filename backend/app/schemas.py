@@ -117,3 +117,10 @@ class BilletResponse(BaseModel):
     date_heure_debut: datetime
     nom_salle: str
     numero_salle: int
+
+
+class PlaceResponse(BaseModel):
+    id_place: int
+    rangee: str
+    numero: int
+    disponible: bool
