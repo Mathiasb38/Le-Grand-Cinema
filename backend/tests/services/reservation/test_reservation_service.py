@@ -1,7 +1,7 @@
 import pytest
 from fastapi import HTTPException
 
-from app.schemas import ReservationCreate
+from app.schemas import ReservationCreate, BilletCreate
 from app.services.reservation_service import (
     create_reservation,
     get_user_reservations,
@@ -9,6 +9,7 @@ from app.services.reservation_service import (
     search_reservations,
     validate_payment,
     get_user_billets,
+    create_billet,
 )
 from sqlalchemy import select
 from app.models import Billet, Reservation
@@ -55,6 +56,45 @@ def test_create_reservation_rejects(reservation_data):
             db_session,
             user,
             ReservationCreate(id_seance=seance.id_seance, id_places=[101]),
+        )
+
+    assert error.value.status_code == 409
+
+
+def test_create_billet(reservation_data):
+    db_session, _, seance, places = reservation_data
+
+    created = create_billet(
+        db_session,
+        BilletCreate(
+            id_seance=seance.id_seance,
+            id_places=[places[0].id_place, places[1].id_place],
+        ),
+    )
+
+    saved = db_session.scalars(
+        select(Billet).where(Billet.id_seance == seance.id_seance)
+    ).all()
+    assert len(created) == 2
+    assert {ticket.id_place for ticket in saved} == {
+        place.id_place for place in places[:2]
+    }
+    assert all(ticket.id_utilisateur is None for ticket in saved)
+    assert {ticket.code_billet for ticket in created} == {
+        ticket.code_billet for ticket in saved
+    }
+
+
+def test_create_billet_rejects(reservation_data):
+    db_session, _, seance, _ = reservation_data
+
+    with pytest.raises(HTTPException) as error:
+        create_billet(
+            db_session,
+            BilletCreate(
+                id_seance=seance.id_seance,
+                id_places=[101],
+            ),
         )
 
     assert error.value.status_code == 409

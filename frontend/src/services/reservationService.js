@@ -45,3 +45,17 @@ export async function validateAdminPayment(reference, token) {
     headers: { Authorization: `Bearer ${token}` },
   })
 }
+
+export async function createAdminSale(idSeance, idPlaces, token) {
+  return apiRequest('/admin/ventes', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      id_seance: Number(idSeance),
+      id_places: idPlaces,
+    }),
+  })
+}

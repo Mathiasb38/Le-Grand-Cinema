@@ -11,6 +11,7 @@ import Register from './pages/Register.jsx'
 import Reservation from './pages/Reservation.jsx'
 import ClientAccount from './pages/ClientAccount.jsx'
 import AdminSearch from './pages/AdminSearch.jsx'
+import AdminSale from './pages/AdminSale.jsx'
 
 export default App
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/admin/connexion" element={<AdminLogin />} />
         <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
         <Route path="/admin/recherche" element={<AdminSearch />} />
+        <Route path="/admin/ventes" element={<AdminSale />} />
 
       </Routes>
       <Footer />

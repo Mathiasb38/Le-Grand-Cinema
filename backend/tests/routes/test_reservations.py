@@ -105,6 +105,31 @@ def test_admin_validate_payment_requires_admin(mock_validate_payment_route, monk
     assert response.status_code == 403
 
 
+def test_admin_create_counter_sale(mock_counter_sale_route):
+    response = TestClient(app).post(
+        "/admin/ventes",
+        json={"id_seance": 1, "id_places": [1, 2]},
+    )
+
+    assert response.status_code == 201
+    assert response.json() == [{"code_billet": "BIL-TEST"}]
+    assert mock_counter_sale_route.call_args.args[1].id_places == [1, 2]
+
+
+def test_admin_create_counter_sale_requires_admin(mock_counter_sale_route, monkeypatch):
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+    response = TestClient(app).post(
+        "/admin/ventes",
+        json={"id_seance": 1, "id_places": [1]},
+    )
+
+    assert response.status_code == 403
+
+
 def test_cancel_reservation(mock_cancel_reservation_route):
     cancel_reservation, _ = mock_cancel_reservation_route
     response = TestClient(app).delete("/reservations/RES-TEST")

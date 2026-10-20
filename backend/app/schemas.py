@@ -111,6 +111,15 @@ class ReservationAdminResponse(BaseModel):
     is_cancelled: bool
 
 
+class BilletCreate(BaseModel):
+    id_seance: int
+    id_places: list[int] = Field(min_length=1)
+
+
+class BilletVenteResponse(BaseModel):
+    code_billet: str
+
+
 class BilletResponse(BaseModel):
     code_billet: str
     titre_film: str
