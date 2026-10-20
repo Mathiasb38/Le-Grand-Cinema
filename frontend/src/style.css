@@ -393,6 +393,39 @@ a {
   gap: var(--spacing-component-padding);
 }
 
+.admin-sale {
+  padding: var(--spacing-component-padding);
+}
+
+.admin-sale__film-card,
+.admin-sale__session-card {
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.admin-sale__session-card {
+  text-align: left;
+}
+
+.admin-sale__film-card:focus-visible,
+.admin-sale__session-card:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+.admin-sale__film-card--selected,
+.admin-sale__session-card--selected {
+  border: 1px solid var(--color-gold-primary);
+}
+
+.admin-sale__seats {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-gold-primary);
+}
+
 .status-badge::before {
   content: '';
   width: 10px;
@@ -520,6 +553,15 @@ a {
   padding: var(--spacing-component-padding);
   color: var(--color-gold-primary);
   font: var(--typo-button);
+}
+
+.header__admin-link {
+  margin: var(--spacing-icon-label);
+}
+
+.header__admin-link.button-black svg,
+.mobile-nav .button-black svg {
+  color: var(--color-gold-primary);
 }
 
 #login-button {
@@ -667,6 +709,7 @@ a {
 
 /* commun */
 
+.admin-sale-page,
 .catalog,
 .film-detail,
 .reservation-page,

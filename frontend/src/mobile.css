@@ -40,7 +40,8 @@
     align-items: stretch;
   }
 
-  .admin-search {
+  .admin-search,
+  .admin-sale {
     width: 100%;
   }
 
