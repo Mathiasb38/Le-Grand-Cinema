@@ -224,6 +224,17 @@ def mock_validate_payment_route(monkeypatch, mock_admin_route):
 
     return validate_payment
 
+
+@pytest.fixture
+def mock_counter_sale_route(monkeypatch, mock_admin_route):
+    create_billet = Mock(return_value=[SimpleNamespace(code_billet="BIL-TEST")])
+    monkeypatch.setattr(
+        "app.routes.reservations.create_billet",
+        create_billet,
+    )
+
+    return create_billet
+
 @pytest.fixture
 def mock_admin_route(monkeypatch):
     user = SimpleNamespace(id_utilisateur=1, role="admin")
