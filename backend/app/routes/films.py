@@ -54,8 +54,8 @@ def seance_places(
     current_user: Utilisateur = Depends(get_current_user),
     session: Session = Depends(get_db),
 ) -> list[PlaceResponse]:
-    if current_user.role != "client":
-        raise HTTPException(status_code=403, detail="Accès réservé aux clients")
+    if current_user.role not in {"client", "admin"}:
+        raise HTTPException(status_code=403, detail="Accès réservé aux clients et administrateurs")
 
     places = get_seance_places(session, id_seance)
     if places is None:
