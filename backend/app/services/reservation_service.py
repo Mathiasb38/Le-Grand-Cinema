@@ -11,6 +11,8 @@ from app.schemas import (
     ReservationDetailsResponse,
     ReservationAdminResponse,
     BilletResponse,
+    BilletCreate,
+    BilletVenteResponse,
 )
 
 
@@ -68,6 +70,60 @@ def create_reservation(
         session.commit()
 
         return reservations
+    except Exception:
+        session.rollback()
+        raise
+
+
+def create_billet(
+    session: Session,
+    sale_data: BilletCreate,
+) -> list[BilletVenteResponse]:
+    try:
+        seance = session.scalar(
+            select(Seance)
+            .where(Seance.id_seance == sale_data.id_seance)
+            .with_for_update()
+        )
+
+        if seance is None or seance.date_heure_debut <= datetime.now():
+            raise HTTPException(status_code=404, detail="Séance introuvable")
+
+        reserved_places = select(Reservation.id_place).where(
+            Reservation.id_seance == seance.id_seance,
+            Reservation.is_cancelled.is_(False),
+        )
+        sold_places = select(Billet.id_place).where(
+            Billet.id_seance == seance.id_seance
+        )
+        places = session.scalars(
+            select(Place).where(
+                Place.id_salle == seance.id_salle,
+                Place.id_place.in_(sale_data.id_places),
+                Place.id_place.not_in(reserved_places),
+                Place.id_place.not_in(sold_places),
+            )
+        ).all()
+
+        if len(places) != len(sale_data.id_places):
+            raise HTTPException(
+                status_code=409,
+                detail="Une ou plusieurs places sont indisponibles",
+            )
+
+        billets = [
+            Billet(
+                code_billet=f"BIL-{uuid4().hex[:12].upper()}",
+                date_emission=datetime.now(),
+                id_place=place.id_place,
+                id_seance=seance.id_seance,
+                id_utilisateur=None,
+            )
+            for place in places
+        ]
+        session.add_all(billets)
+        session.commit()
+        return [BilletVenteResponse(code_billet=billet.code_billet) for billet in billets]
     except Exception:
         session.rollback()
         raise

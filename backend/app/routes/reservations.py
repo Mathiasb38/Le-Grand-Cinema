@@ -9,6 +9,8 @@ from app.schemas import (
     ReservationDetailsResponse,
     ReservationAdminResponse,
     BilletResponse,
+    BilletCreate,
+    BilletVenteResponse,
 )
 from app.services.auth_service import get_current_user, require_admin
 from app.services.reservation_service import (
@@ -18,9 +20,23 @@ from app.services.reservation_service import (
     search_reservations,
     validate_payment,
     get_user_billets,
+    create_billet,
 )
 
 router = APIRouter()
+
+
+@router.post(
+    "/admin/ventes",
+    response_model=list[BilletVenteResponse],
+    status_code=201,
+    dependencies=[Depends(require_admin)],
+)
+def admin_create_counter_sale(
+    sale_data: BilletCreate,
+    session: Session = Depends(get_db),
+) -> list[BilletVenteResponse]:
+    return create_billet(session, sale_data)
 
 
 @router.get(
