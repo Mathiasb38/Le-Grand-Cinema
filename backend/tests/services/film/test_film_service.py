@@ -8,6 +8,7 @@ from app.services.film_service import (
 from app.schemas import FilmWrite, SeanceCreate, SeanceUpdate
 from app.services.film_service import create_seance, update_seance, delete_seance
 from app.services.film_service import get_seance_places
+from app.services.film_service import get_seance_taux
 from app.models import Salle, Seance
 from sqlalchemy import select
 from datetime import datetime, timedelta
@@ -71,6 +72,22 @@ def test_get_all_films(film_data) -> None:
     assert past_film in result
     assert programmed_film in result
     assert far_film in result
+
+
+def test_get_seance_taux_filters_datetime(film_data) -> None:
+    db_session, _, film, _, _, programmed_seance, _ = film_data
+
+    result = get_seance_taux(
+        db_session,
+        programmed_seance.date_heure_debut,
+        programmed_seance.date_heure_debut,
+    )
+
+    assert [seance.id_seance for seance in result] == [programmed_seance.id_seance]
+    assert result[0].id_film == film.id_film
+    assert result[0].titre_film == film.titre
+    assert result[0].id_salle == programmed_seance.id_salle
+    assert result[0].taux_remplissage == 30
 
 
 def test_create_seance(film_data) -> None:
