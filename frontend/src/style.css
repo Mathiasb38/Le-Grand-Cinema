@@ -295,11 +295,6 @@ a {
   gap: var(--spacing-component-padding);
 }
 
-.admin-film-info__form input,
-.admin-film-info__form textarea {
-  background-color: none;
-
-}
 
 .admin-film-info__affiche {
   background: none;
@@ -379,9 +374,6 @@ a {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-component-padding);
-}
-
-.admin-search__details {
   flex: 1;
 }
 
@@ -407,6 +399,105 @@ a {
 
 .admin-sale__session-card {
   text-align: left;
+}
+
+/* Analyse du taux de remplissage */
+.admin-analysis-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis {
+  max-width: 1280px;
+  align-self: flex-start;
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis__filter {
+  display: flex;
+  flex: 0 1 280px;
+  flex-direction: column;
+  gap: var(--spacing-icon-label);
+  min-width: 0;
+  color: var(--color-secondary);
+  font: var(--typo-body-small);
+}
+
+.admin-analysis__filter input {
+  min-height: 52px;
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-surface);
+  border-radius: 8px;
+  background: var(--color-main);
+  color: var(--color-text-primary);
+  font: var(--typo-body-small);
+}
+
+.admin-analysis__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis__row {
+  display: flex;
+  gap: var(--spacing-component-padding);
+}
+
+.admin-analysis__session {
+  display: flex;
+  flex: 0 1 714px;
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 16px;
+  background: var(--color-main);
+}
+
+.admin-analysis__session > span {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-icon-label);
+  padding: var(--spacing-icon-label);
+}
+
+.admin-analysis__film,
+.admin-analysis__date {
+  flex: 1;
+}
+
+.admin-analysis__session svg {
+  flex-shrink: 0;
+  color: var(--color-light);
+}
+
+.admin-analysis__occupancy {
+  display: flex;
+  align-items: center;
+  flex: 0 1 270px;
+  gap: var(--spacing-icon-label);
+}
+
+.admin-analysis__track {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface);
+}
+
+.admin-analysis__track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
 }
 
 .admin-sale__film-card:focus-visible,

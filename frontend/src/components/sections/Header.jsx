@@ -1,4 +1,4 @@
-import { AlignJustify, User, X, CalendarDays, Ticket } from 'lucide-react'
+import { AlignJustify, User, X, CalendarDays, Ticket, ChartNoAxesCombined } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import logo from '../../assets/logo.png'
@@ -20,7 +20,15 @@ function Header() {
         <Link className="header__link" to="/films">Films</Link>
       </nav>
       {isAdmin && (
-        <>
+        <div className="header__admin-links">
+          <NavLink
+            className={({ isActive }) => `${isActive ? 'button-gold' : 'button-black'} header__admin-link`}
+            end
+            to="/admin/analyse"
+          >
+            <ChartNoAxesCombined aria-hidden="true" />
+            Analyse
+          </NavLink>
           <NavLink
             className={({ isActive }) => `${isActive ? 'button-gold' : 'button-black'} header__admin-link`}
             end
@@ -37,7 +45,7 @@ function Header() {
             <CalendarDays aria-hidden="true" />
             Réservations
           </NavLink>
-        </>
+        </div>
       )}
       {!isAdmin && isAuthenticated ? (
         <Link className="user-icon" to="/compte" aria-label="Mon compte">

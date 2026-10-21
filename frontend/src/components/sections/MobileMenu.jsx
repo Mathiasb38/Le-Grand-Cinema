@@ -1,6 +1,6 @@
 import { Link, NavLink } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
-import { CalendarDays, Ticket } from 'lucide-react'
+import { CalendarDays, Ticket, ChartNoAxesCombined } from 'lucide-react'
 
 export default MobileMenu
 
@@ -20,6 +20,15 @@ function MobileMenu({ onClose }) {
       )}
       {isAdmin && (
         <>
+          <NavLink
+            className={({ isActive }) => isActive ? 'button-gold' : 'button-black'}
+            end
+            to="/admin/analyse"
+            onClick={onClose}
+          >
+            <ChartNoAxesCombined aria-hidden="true" />
+            Analyse
+          </NavLink>
           <NavLink
             className={({ isActive }) => isActive ? 'button-gold' : 'button-black'}
             end

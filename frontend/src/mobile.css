@@ -59,9 +59,36 @@
     min-height: auto;
   }
 
-  .seat-reservation__plan,
-  .seat-reservation__summary {
+  .admin-analysis__row {
+    flex-direction: column;
+  }
+
+  .admin-analysis__session,
+  .admin-analysis__occupancy {
     flex-basis: auto;
+  }
+
+  .header {
+    height: auto;
+    min-height: 80px;
+  }
+
+  .header__admin-links {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .header__admin-link {
+    padding: 8px 12px;
+    gap: 6px;
+    font: var(--typo-body-small);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .header__admin-link svg {
+    width: 20px;
+    height: 20px;
   }
 
 }
@@ -88,6 +115,26 @@
   /* Header */
   .header__nav {
     display: none;
+  }
+
+  .admin-analysis {
+    width: 100%;
+    margin: 0;
+  }
+
+  .admin-analysis__session {
+    flex-wrap: wrap;
+    gap: var(--spacing-icon-label);
+    font: var(--typo-body-small);
+  }
+
+  .admin-analysis__session > span {
+    padding: 0;
+  }
+
+  .admin-analysis__film,
+  .admin-analysis__date {
+    flex-basis: 100%;
   }
 
   .header__admin-link {
