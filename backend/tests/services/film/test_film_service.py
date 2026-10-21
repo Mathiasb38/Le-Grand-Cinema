@@ -90,6 +90,36 @@ def test_get_seance_taux_filters_datetime(film_data) -> None:
     assert result[0].taux_remplissage == 30
 
 
+def test_get_seance_taux_filters_film_and_salle(film_data) -> None:
+    db_session, _, _, far_film, _, _, far_seance = film_data
+    other_salle = Salle(numero=777, nom="autre", capacite_max=5)
+    db_session.add(other_salle)
+    db_session.flush()
+    other_seance = Seance(
+        date_heure_debut=datetime.now() + timedelta(days=9),
+        id_film=far_film.id_film,
+        id_salle=other_salle.id_salle,
+    )
+    db_session.add(other_seance)
+    db_session.flush()
+    date_debut = datetime.now() - timedelta(days=2)
+    date_fin = datetime.now() + timedelta(days=10)
+
+    film_result = get_seance_taux(db_session, id_film=far_film.id_film)
+    salle_result = get_seance_taux(db_session, id_salle=other_salle.id_salle)
+    combined_result = get_seance_taux(
+        db_session,
+        date_debut,
+        date_fin,
+        id_film=far_film.id_film,
+        id_salle=other_salle.id_salle,
+    )
+
+    assert {item.id_seance for item in film_result} == {far_seance.id_seance, other_seance.id_seance}
+    assert [item.id_seance for item in salle_result] == [other_seance.id_seance]
+    assert [item.id_seance for item in combined_result] == [other_seance.id_seance]
+
+
 def test_create_seance(film_data) -> None:
     db_session, film, *_ = film_data
     salle = db_session.scalar(select(Salle))
