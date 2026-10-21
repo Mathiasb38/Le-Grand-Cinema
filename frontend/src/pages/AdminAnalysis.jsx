@@ -1,13 +1,17 @@
 import { CalendarDays, Clock, Film, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '../components/sections/Modal.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
-import { getAdminSeanceTaux } from '../services/filmService.js'
+import { getAdminSeanceTaux, getAdminFilms, getAdminSalles } from '../services/filmService.js'
 
 export default AdminAnalysis
 
 function AdminAnalysis() {
   const { isAdmin, token } = useAuth()
+  const [films, setFilms] = useState([])
+  const [salles, setSalles] = useState([])
+  const [selectedFilmId, setSelectedFilmId] = useState('')
+  const [selectedSalleId, setSelectedSalleId] = useState('')
   const [dateDebut, setDateDebut] = useState('')
   const [dateFin, setDateFin] = useState('')
   const [sessions, setSessions] = useState([])
@@ -15,26 +19,52 @@ function AdminAnalysis() {
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
 
+  useEffect(() => {
+    if (!isAdmin) return
+
+    Promise.all([getAdminFilms(token), getAdminSalles(token)])
+      .then(([filmList, salleList]) => {
+        setFilms(filmList)
+        setSalles(salleList)
+      })
+      .catch((loadError) => setModal({ type: 'error', message: loadError.message }))
+  }, [isAdmin, token])
+
   if (!isAdmin) return null
 
   async function handleSearch(event) {
     event.preventDefault()
     setModal(null)
-    setHasSearched(true)
 
-    if (new Date(dateDebut) > new Date(dateFin)) {
+    if (Boolean(dateDebut) !== Boolean(dateFin)) {
       setSessions([])
-      setHasSearched(false)
+      setModal({ type: 'error', message: 'Les deux dates sont requises ensemble.' })
+      return
+    }
+
+    if (!selectedFilmId && !selectedSalleId && !dateDebut) {
+      setSessions([])
+      setModal({ type: 'error', message: 'Au moins un filtre est requis.' })
+      return
+    }
+
+    if (dateDebut && dateDebut > dateFin) {
+      setSessions([])
       setModal({ type: 'error', message: 'La date de début doit précéder la date de fin.' })
       return
     }
 
     setIsLoading(true)
     try {
-      setSessions(await getAdminSeanceTaux(dateDebut, dateFin, token))
+      setSessions(await getAdminSeanceTaux({
+        dateDebut,
+        dateFin,
+        idFilm: selectedFilmId,
+        idSalle: selectedSalleId,
+      }, token))
+      setHasSearched(true)
     } catch (loadError) {
       setSessions([])
-      setHasSearched(false)
       setModal({ type: 'error', message: loadError.message })
     } finally {
       setIsLoading(false)
@@ -46,21 +76,41 @@ function AdminAnalysis() {
       <section className="panel admin-analysis" aria-label="Analyse du taux de remplissage">
         <form className="admin-analysis__filters" onSubmit={handleSearch}>
           <label className="admin-analysis__filter">
-            <span>Date et heure de début</span>
+            <select
+              aria-label="Film"
+              value={selectedFilmId}
+              onChange={(event) => setSelectedFilmId(event.target.value)}
+            >
+              <option value="">Tous les films</option>
+              {films.map((film) => (
+                <option key={film.id_film} value={film.id_film}>{film.titre}</option>
+              ))}
+            </select>
+          </label>
+          <label className="admin-analysis__filter">
+            <select
+              aria-label="Salle"
+              value={selectedSalleId}
+              onChange={(event) => setSelectedSalleId(event.target.value)}
+            >
+              <option value="">Toutes les salles</option>
+              {salles.map((salle) => (
+                <option key={salle.id_salle} value={salle.id_salle}>Salle {salle.numero}</option>
+              ))}
+            </select>
+          </label>
+          <label className="admin-analysis__filter">
             <input
               type="datetime-local"
               value={dateDebut}
               onChange={(event) => setDateDebut(event.target.value)}
-              required
             />
           </label>
           <label className="admin-analysis__filter">
-            <span>Date et heure de fin</span>
             <input
               type="datetime-local"
               value={dateFin}
               onChange={(event) => setDateFin(event.target.value)}
-              required
             />
           </label>
           <button className="button-black" type="submit" disabled={isLoading}>
@@ -111,9 +161,9 @@ function AdminAnalysis() {
           })}
         </ul>
         {!isLoading && hasSearched && sessions.length === 0 && (
-          <p className="secondaire" role="status">Aucune séance sur cette période.</p>
+          <p className="secondaire" role="status">Aucune séance ne correspond aux filtres.</p>
         )}
-        {!hasSearched && <p className="secondaire" role="status">Sélectionnez une période pour consulter les taux de remplissage.</p>}
+        {!hasSearched && <p className="secondaire" role="status">Choisissez au moins un filtre pour consulter les taux de remplissage.</p>}
       </section>
       {modal && <Modal {...modal} onClose={() => setModal(null)} />}
     </main>

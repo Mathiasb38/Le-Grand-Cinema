@@ -91,8 +91,10 @@ def get_available_places(session: Session, seance: Seance) -> int:
 
 def get_seance_taux(
     session: Session,
-    date_debut: datetime,
-    date_fin: datetime,
+    date_debut: datetime | None = None,
+    date_fin: datetime | None = None,
+    id_film: int | None = None,
+    id_salle: int | None = None,
 ) -> list[SeanceRemplissageResponse]:
     occupied_places = (
         select(func.count(Billet.id_billet))
@@ -125,10 +127,14 @@ def get_seance_taux(
         .join(Film, Seance.id_film == Film.id_film)
         .order_by(Seance.date_heure_debut)
     )
-    statement = statement.where(
-        Seance.date_heure_debut >= date_debut,
-        Seance.date_heure_debut <= date_fin,
-    )
+    if date_debut is not None:
+        statement = statement.where(Seance.date_heure_debut >= date_debut)
+    if date_fin is not None:
+        statement = statement.where(Seance.date_heure_debut <= date_fin)
+    if id_film is not None:
+        statement = statement.where(Seance.id_film == id_film)
+    if id_salle is not None:
+        statement = statement.where(Seance.id_salle == id_salle)
 
     return [
         SeanceRemplissageResponse(

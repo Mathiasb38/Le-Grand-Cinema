@@ -85,7 +85,7 @@ def test_admin_seance_taux_datetime(monkeypatch, mock_admin_route) -> None:
     monkeypatch.setattr("app.routes.films.get_seance_taux", get_taux)
 
     response = TestClient(app).get(
-        "/admin/remplissage?date_debut=2026-10-19T12:30:00&date_fin=2026-10-20T14:45:00"
+        "/admin/remplissage?date_debut=2026-10-19T12:30:00&date_fin=2026-10-20T14:45:00&id_film=2&id_salle=3"
     )
 
     assert response.status_code == 200
@@ -96,6 +96,21 @@ def test_admin_seance_taux_datetime(monkeypatch, mock_admin_route) -> None:
     assert get_taux.call_args.args[0] is None
     assert get_taux.call_args.args[1].isoformat() == "2026-10-19T12:30:00"
     assert get_taux.call_args.args[2].isoformat() == "2026-10-20T14:45:00"
+    assert get_taux.call_args.args[3:] == (2, 3)
+
+
+def test_admin_seance_taux_requires_filter(mock_admin_route) -> None:
+    response = TestClient(app).get("/admin/remplissage")
+
+    assert response.status_code == 422
+
+
+def test_admin_seance_taux_requires_both_dates(mock_admin_route) -> None:
+    response = TestClient(app).get(
+        "/admin/remplissage?date_debut=2026-10-19T12:30:00&id_film=2"
+    )
+
+    assert response.status_code == 422
 
 
 def test_admin_seance_taux_requires_admin(monkeypatch) -> None:

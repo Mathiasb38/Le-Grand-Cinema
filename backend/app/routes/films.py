@@ -96,11 +96,18 @@ def admin_film_details(id_film: int, session: Session = Depends(get_db)) -> Film
     dependencies=[Depends(require_admin)],
 )
 def admin_seance_taux(
-    date_debut: datetime,
-    date_fin: datetime,
+    date_debut: datetime | None = None,
+    date_fin: datetime | None = None,
+    id_film: int | None = None,
+    id_salle: int | None = None,
     session: Session = Depends(get_db),
 ) -> list[SeanceRemplissageResponse]:
-    return get_seance_taux(session, date_debut, date_fin)
+    if (date_debut is None) != (date_fin is None):
+        raise HTTPException(422, "Les deux dates sont requises ensemble")
+    if date_debut is None and id_film is None and id_salle is None:
+        raise HTTPException(422, "Au moins un filtre est requis")
+
+    return get_seance_taux(session, date_debut, date_fin, id_film, id_salle)
 
 
 @router.post("/admin/films", response_model=FilmResponse, status_code=201, dependencies=[Depends(require_admin)])

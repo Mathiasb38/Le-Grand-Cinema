@@ -107,6 +107,7 @@ select {
   border-radius: 8px;
   background: var(--color-main);
   color: var(--color-text-primary);
+  margin: var(--spacing-icon-label);
 
 }
 
@@ -414,33 +415,8 @@ a {
   padding: var(--spacing-component-padding);
 }
 
-.admin-analysis__filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--spacing-component-padding);
-  padding: var(--spacing-component-padding);
-}
 
-.admin-analysis__filter {
-  display: flex;
-  flex: 0 1 280px;
-  flex-direction: column;
-  gap: var(--spacing-icon-label);
-  min-width: 0;
-  color: var(--color-secondary);
-  font: var(--typo-body-small);
-}
 
-.admin-analysis__filter input {
-  min-height: 52px;
-  padding: var(--spacing-component-padding);
-  border: 1px solid var(--color-surface);
-  border-radius: 8px;
-  background: var(--color-main);
-  color: var(--color-text-primary);
-  font: var(--typo-body-small);
-}
 
 .admin-analysis__results {
   display: flex;
