@@ -12,6 +12,7 @@ import Reservation from './pages/Reservation.jsx'
 import ClientAccount from './pages/ClientAccount.jsx'
 import AdminSearch from './pages/AdminSearch.jsx'
 import AdminSale from './pages/AdminSale.jsx'
+import AdminAnalysis from './pages/AdminAnalysis.jsx'
 
 export default App
 
@@ -39,6 +40,7 @@ function App() {
         <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
         <Route path="/admin/recherche" element={<AdminSearch />} />
         <Route path="/admin/ventes" element={<AdminSale />} />
+        <Route path="/admin/analyse" element={<AdminAnalysis />} />
 
       </Routes>
       <Footer />

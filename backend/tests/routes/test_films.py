@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.services.auth_service import get_current_user
 from types import SimpleNamespace
+from unittest.mock import Mock
 
 
 def test_list_films(mock_film_routes) -> None:
@@ -68,6 +69,47 @@ def test_admin_film_details(mock_film_routes, monkeypatch) -> None:
     assert response.status_code == 200
     assert response.json()["seances"][0]["places_disponibles"] == 10
 
+
+def test_admin_seance_taux_datetime(monkeypatch, mock_admin_route) -> None:
+    seances = [SimpleNamespace(
+        id_film=2,
+        titre_film="Film test",
+        id_seance=1,
+        date_heure_debut="2026-10-19T20:00:00",
+        id_salle=3,
+        nom_salle="Salle principale",
+        numero_salle=1,
+        taux_remplissage=30,
+    )]
+    get_taux = Mock(return_value=seances)
+    monkeypatch.setattr("app.routes.films.get_seance_taux", get_taux)
+
+    response = TestClient(app).get(
+        "/admin/remplissage?date_debut=2026-10-19T12:30:00&date_fin=2026-10-20T14:45:00"
+    )
+
+    assert response.status_code == 200
+    assert response.json()[0]["taux_remplissage"] == 30
+    assert response.json()[0]["id_film"] == 2
+    assert response.json()[0]["titre_film"] == "Film test"
+    assert response.json()[0]["id_salle"] == 3
+    assert get_taux.call_args.args[0] is None
+    assert get_taux.call_args.args[1].isoformat() == "2026-10-19T12:30:00"
+    assert get_taux.call_args.args[2].isoformat() == "2026-10-20T14:45:00"
+
+
+def test_admin_seance_taux_requires_admin(monkeypatch) -> None:
+    monkeypatch.setitem(
+        app.dependency_overrides,
+        get_current_user,
+        lambda: SimpleNamespace(role="client"),
+    )
+
+    response = TestClient(app).get(
+        "/admin/remplissage?date_debut=2026-10-19T12:30:00&date_fin=2026-10-20T14:45:00"
+    )
+
+    assert response.status_code == 403
 
 def test_admin_create_film(mock_admin_film_routes) -> None:
     response = TestClient(app).post("/admin/films", json={

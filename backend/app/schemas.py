@@ -32,6 +32,17 @@ class SeanceResponse(BaseModel):
     places_disponibles: int
 
 
+class SeanceRemplissageResponse(BaseModel):
+    id_film: int
+    titre_film: str
+    id_seance: int
+    date_heure_debut: datetime
+    id_salle: int
+    nom_salle: str
+    numero_salle: int
+    taux_remplissage: float
+
+
 class SeanceCreate(BaseModel):
     id_film: int
     id_salle: int

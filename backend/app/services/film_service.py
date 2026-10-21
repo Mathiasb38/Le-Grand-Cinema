@@ -4,7 +4,15 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 
 from app.models import Film, Seance, Reservation, Salle, Billet, Place
-from app.schemas import FilmDetailsResponse, SeanceResponse, FilmWrite, SeanceCreate, SeanceUpdate, PlaceResponse
+from app.schemas import (
+    FilmDetailsResponse,
+    SeanceResponse,
+    FilmWrite,
+    SeanceCreate,
+    SeanceUpdate,
+    PlaceResponse,
+    SeanceRemplissageResponse,
+)
 from fastapi import HTTPException
 
 
@@ -79,6 +87,73 @@ def get_available_places(session: Session, seance: Seance) -> int:
 
     capacity, occupied_places, reserved_places = session.execute(statement).one()
     return max(capacity - occupied_places - reserved_places, 0)
+
+
+def get_seance_taux(
+    session: Session,
+    date_debut: datetime,
+    date_fin: datetime,
+) -> list[SeanceRemplissageResponse]:
+    occupied_places = (
+        select(func.count(Billet.id_billet))
+        .where(Billet.id_seance == Seance.id_seance)
+        .scalar_subquery()
+    )
+    reserved_places = (
+        select(func.count(Reservation.id_reservation))
+        .where(
+            Reservation.id_seance == Seance.id_seance,
+            Reservation.is_cancelled.is_(False),
+            Reservation.is_paid.is_(False),
+        )
+        .scalar_subquery()
+    )
+    statement = (
+        select(
+            Film.id_film,
+            Film.titre,
+            Seance.id_seance,
+            Seance.date_heure_debut,
+            Seance.id_salle,
+            Salle.nom,
+            Salle.numero,
+            Salle.capacite_max,
+            occupied_places,
+            reserved_places,
+        )
+        .join(Salle, Seance.id_salle == Salle.id_salle)
+        .join(Film, Seance.id_film == Film.id_film)
+        .order_by(Seance.date_heure_debut)
+    )
+    statement = statement.where(
+        Seance.date_heure_debut >= date_debut,
+        Seance.date_heure_debut <= date_fin,
+    )
+
+    return [
+        SeanceRemplissageResponse(
+            id_film=id_film_value,
+            titre_film=titre_film,
+            id_seance=id_seance,
+            date_heure_debut=date_heure_debut,
+            id_salle=id_salle_value,
+            nom_salle=nom_salle,
+            numero_salle=numero_salle,
+            taux_remplissage=(occupied_count + reserved_count) / capacity * 100,
+        )
+        for (
+            id_film_value,
+            titre_film,
+            id_seance,
+            date_heure_debut,
+            id_salle_value,
+            nom_salle,
+            numero_salle,
+            capacity,
+            occupied_count,
+            reserved_count,
+        ) in session.execute(statement)
+    ]
 
 
 def get_seance_places(

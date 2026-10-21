@@ -1,11 +1,21 @@
-from datetime import date
+from datetime import date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Film, Salle, Utilisateur
-from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse, FilmWrite, SeanceCreate, SalleResponse, SeanceUpdate, PlaceResponse
+from app.schemas import (
+    FilmDetailsResponse,
+    FilmResponse,
+    SeanceResponse,
+    FilmWrite,
+    SeanceCreate,
+    SalleResponse,
+    SeanceUpdate,
+    PlaceResponse,
+    SeanceRemplissageResponse,
+)
 from app.services.film_service import (
     get_film_details,
     get_programmed_films,
@@ -17,6 +27,7 @@ from app.services.film_service import (
     update_seance,
     delete_seance,
     get_seance_places,
+    get_seance_taux,
 )
 from app.services.auth_service import require_admin, get_current_user
 
@@ -77,6 +88,19 @@ def admin_film_details(id_film: int, session: Session = Depends(get_db)) -> Film
         raise HTTPException(status_code=404, detail="Film introuvable")
 
     return film
+
+
+@router.get(
+    "/admin/remplissage",
+    response_model=list[SeanceRemplissageResponse],
+    dependencies=[Depends(require_admin)],
+)
+def admin_seance_taux(
+    date_debut: datetime,
+    date_fin: datetime,
+    session: Session = Depends(get_db),
+) -> list[SeanceRemplissageResponse]:
+    return get_seance_taux(session, date_debut, date_fin)
 
 
 @router.post("/admin/films", response_model=FilmResponse, status_code=201, dependencies=[Depends(require_admin)])
