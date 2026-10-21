@@ -463,6 +463,10 @@ a {
   gap: var(--spacing-icon-label);
 }
 
+.admin-analysis__session--high-attendance {
+  background: var(--color-danger);
+}
+
 .admin-analysis__track {
   flex: 1;
   height: 8px;

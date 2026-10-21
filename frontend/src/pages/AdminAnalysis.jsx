@@ -122,11 +122,13 @@ function AdminAnalysis() {
           {sessions.map((session) => {
             const date = new Date(session.date_heure_debut)
             const rate = Math.round(session.taux_remplissage)
-            const color = rate >= 80 ? 'var(--color-danger)' : rate >= 50 ? 'var(--color-gold-primary)' : 'var(--color-success)'
+            const isHighAttendance = session.taux_remplissage >= 80
+            const isVeryHighAttendance = session.taux_remplissage >= 90
+            const color = isHighAttendance ? 'var(--color-danger)' : rate >= 50 ? 'var(--color-gold-primary)' : 'var(--color-success)'
 
             return (
               <li className="admin-analysis__row" key={session.id_seance}>
-                <div className="admin-analysis__session">
+                <div className={`admin-analysis__session${isVeryHighAttendance ? ' admin-analysis__session--high-attendance' : ''}`}>
                   <span className="admin-analysis__film"><Film aria-hidden="true" />{session.titre_film}</span>
                   <span className="admin-analysis__date">
                     <CalendarDays aria-hidden="true" />
