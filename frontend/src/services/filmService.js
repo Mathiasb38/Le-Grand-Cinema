@@ -50,8 +50,12 @@ export async function getAdminFilmDetails(idFilm, token) {
   })
 }
 
-export async function getAdminSeanceTaux(dateDebut, dateFin, token) {
-  const params = new URLSearchParams({ date_debut: dateDebut, date_fin: dateFin })
+export async function getAdminSeanceTaux(filters, token) {
+  const params = new URLSearchParams()
+  if (filters.dateDebut) params.set('date_debut', filters.dateDebut)
+  if (filters.dateFin) params.set('date_fin', filters.dateFin)
+  if (filters.idFilm) params.set('id_film', filters.idFilm)
+  if (filters.idSalle) params.set('id_salle', filters.idSalle)
   return apiRequest(`/admin/remplissage?${params}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
