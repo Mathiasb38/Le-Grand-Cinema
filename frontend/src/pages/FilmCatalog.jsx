@@ -17,7 +17,7 @@ function FilmCatalog() {
   useEffect(() => {
     setIsLoading(true)
     const request = isAdmin ? getAdminFilms(token) : getFilms()
-    request.then(setFilms).finally(() => setIsLoading(false))
+    request.then(setFilms).catch(() => setFilms([])).finally(() => setIsLoading(false))
   }, [isAdmin, token])
 
   return (
