@@ -14,7 +14,7 @@ function SeatReservation({
 }) {
   const [isZoomed, setIsZoomed] = useState(false)
   const scrollRef = useRef(null)
-  const rows = [...new Set(places.map((place) => place.rangee))].sort()
+  const rows = [...new Set(places.map((place) => place.rangee))].sort((a, b) => a.localeCompare(b))
   const columns = [...new Set(places.map((place) => place.numero))].sort((a, b) => a - b)
   const selectedPlaces = places.filter(
     (place) => place.disponible && selectedIds.includes(place.id_place),
