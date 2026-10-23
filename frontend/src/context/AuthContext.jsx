@@ -9,6 +9,10 @@ export function AuthProvider({ children }) {
 
   async function saveToken(loginRequest) {
     const { access_token: accessToken } = await loginRequest
+    if (!/^[\w-]+\.[\w-]+\.[\w-]+$/.test(accessToken)) {
+      throw new Error('Jeton invalide')
+    }
+
     localStorage.setItem('access_token', accessToken)
     setToken(accessToken)
   }

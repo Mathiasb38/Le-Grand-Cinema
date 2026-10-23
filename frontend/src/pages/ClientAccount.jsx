@@ -40,7 +40,7 @@ function ClientAccount() {
       }
     }
 
-    loadReservations()
+    void loadReservations()
   }, [isAuthenticated, navigate, token])
 
   if (!isAuthenticated) {
