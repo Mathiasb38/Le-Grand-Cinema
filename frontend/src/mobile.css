@@ -251,6 +251,13 @@
     cursor: zoom-in;
   }
 
+  .seat-reservation__map-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+  }
+
   .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__map {
     width: 100%;
   }

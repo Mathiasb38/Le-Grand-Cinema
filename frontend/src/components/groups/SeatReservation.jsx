@@ -37,11 +37,6 @@ function SeatReservation({
             tabIndex={0}
             role="region"
             aria-label="Plan de la salle"
-            onClick={(event) => {
-              if (isZoomed && !event.target.closest('.seat-reservation__seat')) {
-                setIsZoomed(false)
-              }
-            }}
             onFocusCapture={() => {
               if (window.matchMedia('(max-width: 650px)').matches) setIsZoomed(true)
             }}
@@ -90,6 +85,15 @@ function SeatReservation({
               </ul>
             </div>
           </div>
+          {isZoomed && (
+            <button
+              className="button-black seat-reservation__map-close"
+              type="button"
+              onClick={() => setIsZoomed(false)}
+            >
+              Réduire
+            </button>
+          )}
           {!isZoomed && (
             <button
               className="seat-reservation__map-zoom"
