@@ -256,7 +256,9 @@ def search_reservations(
 
 def validate_payment(session: Session, reference: str) -> None:
     reservation = session.scalar(
-        select(Reservation).where(Reservation.reference == reference)
+        select(Reservation)
+        .where(Reservation.reference == reference)
+        .with_for_update(of=Reservation)
     )
 
     if reservation is None:
@@ -295,6 +297,7 @@ def cancel_reservation(session: Session, user: Utilisateur, reference: str) -> N
             Reservation.reference == reference,
             Reservation.id_utilisateur == user.id_utilisateur,
         )
+        .with_for_update(of=Reservation)
     )
 
     reservation_and_date = session.execute(statement).one_or_none()

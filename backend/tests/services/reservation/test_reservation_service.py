@@ -11,7 +11,7 @@ from app.services.reservation_service import (
     get_user_billets,
     create_billet,
 )
-from sqlalchemy import select
+from sqlalchemy import select, event
 from app.models import Billet, Reservation
 from datetime import datetime
 
@@ -189,6 +189,28 @@ def test_search_reservations_by_email(reservations_data):
         "RES-PAID",
         "RES-CANCELLED",
     }
+
+
+@pytest.mark.parametrize("operation", ["payment", "cancellation"])
+def test_payment_and_cancellation_lock_reservation(reservations_data, operation):
+    db_session, user, _, _ = reservations_data
+    statements = []
+    connection = db_session.connection()
+
+    def capture_statement(conn, statement, multiparams, params, execution_options):
+        if "FOR UPDATE" in str(statement):
+            statements.append(statement)
+
+    event.listen(connection, "before_execute", capture_statement)
+    try:
+        if operation == "payment":
+            validate_payment(db_session, "RES-CLIENT")
+        else:
+            cancel_reservation(db_session, user, "RES-CLIENT")
+    finally:
+        event.remove(connection, "before_execute", capture_statement)
+
+    assert len(statements) == 1
 
 
 def test_validate_payment_marks_reservation_paid_and_creates_ticket(reservations_data):
