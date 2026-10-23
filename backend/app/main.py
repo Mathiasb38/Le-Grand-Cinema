@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import Base, get_engine
 from app.routes.films import router as films_router
 from app.routes.auth import router as auth_router
+from app.routes.reservations import router as reservations_router
 
 
 @asynccontextmanager
@@ -25,7 +26,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://le-grand-cinema-frontend.onrender.com"
+        "https://le-grand-cinema-frontend.onrender.com",
+        "https://le-grand-cinema-frondend-pre-production.onrender.com"
 
     ],
     allow_credentials=True,
@@ -41,3 +43,4 @@ def health_check() -> dict[str, str]:
 
 app.include_router(films_router)
 app.include_router(auth_router)
+app.include_router(reservations_router)

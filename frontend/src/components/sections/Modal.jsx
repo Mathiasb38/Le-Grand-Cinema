@@ -8,9 +8,13 @@ const modalTypes = {
   validation: { title: 'Validation', confirmLabel: 'Oui', cancelLabel: 'Non' },
 }
 
-function Modal({ type, message, onClose, onConfirm, onCancel }) {
+function Modal({ type, message, onClose, onConfirm, onCancel, isLoading = false }) {
   const content = modalTypes[type]
   const isValidation = type === 'validation'
+  const details = message?.detail ?? message
+  const displayedMessage = Array.isArray(details)
+    ? details.map((detail) => detail.msg || detail.message || detail).join(', ')
+    : message?.message || details
 
   return (
     <div className="modal-overlay">
@@ -24,11 +28,11 @@ function Modal({ type, message, onClose, onConfirm, onCancel }) {
           <X aria-hidden="true" />
         </button>
         <h2 className="titre" id="modal-title">{content.title}</h2>
-        <p className="petit">{message}</p>
+        <p className="petit">{displayedMessage}</p>
         <div className="modal__actions">
           {isValidation ? (
             <>
-              <button className="button-gold" type="button" onClick={onConfirm}>
+              <button className="button-gold" type="button" onClick={onConfirm} disabled={isLoading}>
                 {content.confirmLabel}
               </button>
               <button className="button-black" type="button" onClick={onCancel}>

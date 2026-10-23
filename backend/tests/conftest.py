@@ -12,5 +12,14 @@ os.environ["DATABASE_URL"] = os.environ["DATABASE_URL_TEST"]
 
 @pytest.fixture
 def db_session():
-    with Session(get_engine()) as session:
-        yield session
+    with get_engine().connect() as connection:
+        transaction = connection.begin()
+
+        try:
+            with Session(
+                bind=connection,
+                join_transaction_mode="create_savepoint",
+            ) as session:
+                yield session
+        finally:
+            transaction.rollback()

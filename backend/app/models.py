@@ -9,7 +9,8 @@ from sqlalchemy import (
     String,
     UniqueConstraint,
     Index,
-    text
+    text,
+    Text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -32,7 +33,7 @@ class Salle(Base):
 
     id_salle: Mapped[int] = mapped_column(Integer, primary_key=True)
     numero: Mapped[int] = mapped_column(SmallInteger, unique=True)
-    nom: Mapped[str | None] = mapped_column(String(50))
+    nom: Mapped[str] = mapped_column(String(50), nullable=False)
     capacite_max: Mapped[int] = mapped_column(SmallInteger)
 
 
@@ -44,10 +45,12 @@ class Film(Base):
     titre: Mapped[str] = mapped_column(String(50))
     duree_minutes: Mapped[int] = mapped_column(SmallInteger)
     affiche_url: Mapped[str] = mapped_column(String(500))
+    description: Mapped[str] = mapped_column(Text, nullable=False)
 
 class Seance(Base):
 
     __tablename__ = "SEANCE"
+    __table_args__ = (Index("ix_seance_salle_date_heure_debut", "id_salle", "date_heure_debut"),)
 
     id_seance: Mapped[int] = mapped_column(Integer, primary_key=True)
     date_heure_debut: Mapped[datetime] = mapped_column(DateTime)
@@ -100,3 +103,7 @@ class Billet(Base):
     date_emission: Mapped[datetime] = mapped_column(DateTime)
     id_place: Mapped[int] = mapped_column(ForeignKey("PLACE.id_place"))
     id_seance: Mapped[int] = mapped_column(ForeignKey("SEANCE.id_seance"))
+    id_utilisateur: Mapped[int | None] = mapped_column(
+        ForeignKey("UTILISATEUR.id_utilisateur"),
+        nullable=True,
+    )

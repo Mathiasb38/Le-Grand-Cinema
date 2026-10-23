@@ -12,16 +12,19 @@ def film_data(db_session):
         titre="Past",
         duree_minutes=120,
         affiche_url="https://xxx.com/past.jpg",
+        description="Description du film passé",
     )
     programmed_film = Film(
         titre="Futur",
         duree_minutes=120,
         affiche_url="https://xxx.com/futur.jpg",
+        description="Description du film programmé",
     )
     far_film = Film(
         titre="8 Days Later",
         duree_minutes=120,
         affiche_url="https://xxx.com/far.jpg",
+        description="Description du film lointain",
     )
     db_session.add_all([salle, past_film, programmed_film, far_film])
     db_session.flush()
@@ -63,12 +66,14 @@ def film_data(db_session):
             date_emission=now,
             id_place=places[0].id_place,
             id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
         ),
         Billet(
             code_billet="TEST-2",
             date_emission=now,
             id_place=places[1].id_place,
             id_seance=programmed_seance.id_seance,
+            id_utilisateur=user.id_utilisateur,
         ),
         Reservation(
             reference="RES-1",

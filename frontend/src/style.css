@@ -88,6 +88,29 @@ body {
 }
 
 /* --- éléments --- */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+}
+
+input,
+select {
+
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-surface);
+  border-radius: 8px;
+  background: var(--color-main);
+  color: var(--color-text-primary);
+  margin: var(--spacing-icon-label);
+
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -132,6 +155,11 @@ a {
   margin: 0;
 }
 
+.secondaire {
+  font: var(--typo-body-small);
+  color: var(--color-secondary);
+}
+
 .hero .display-xl {
   margin: 80px 0 0 120px;
   letter-spacing: 10px;
@@ -139,7 +167,8 @@ a {
 }
 
 .button-black,
-.button-gold {
+.button-gold,
+.button-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -170,6 +199,17 @@ a {
   stroke-width: 1.8;
 }
 
+.button-gold:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.button-danger {
+  background: var(--color-main);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
 .reserve-button {
   position: absolute;
   top: 34px;
@@ -177,10 +217,6 @@ a {
   padding: 12px 16px;
 }
 
-.reserve-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
 
 .reserve-button svg {
   width: 24px;
@@ -239,11 +275,260 @@ a {
   height: 360px;
 }
 
+.film-poster {
+  width: 240px;
+  height: 360px;
+  background: var(--color-surface);
+
+}
+
+
 .film-info__info {
+  padding: var(--spacing-component-padding);
+  min-width: 0
+}
+
+/* admin film*/
+
+.admin-film-info__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+}
+
+
+.admin-film-info__affiche {
+  background: none;
+}
+
+.admin-film-info__titre {
+  background: none;
+
+}
+
+.admin-film-info__description {
+  padding: var(--spacing-component-padding);
+  background: none;
+  height: 200px;
+}
+
+.admin-film-info__duree {
+  display: flex;
+  align-items: center;
+}
+
+.admin-film-info__number {
+  padding: var(--spacing-component-padding);
+  background: none;
+  width: 55px;
+}
+
+.admin__film-action {
+
+  margin: var(--spacing-icon-label)
+}
+
+/* Recherche au guichet */
+.admin-search-page {
+  display: flex;
+  justify-content: center;
   padding: var(--spacing-component-padding);
 }
 
-/* séances */ 
+.admin-search {
+  padding: var(--spacing-component-padding);
+}
+
+.admin-search__form {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-component-padding);
+  max-width: 500px;
+  margin: auto;
+}
+
+.admin-search__field {
+  border: 1px solid var(--color-surface);
+}
+
+.admin-search__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+  max-width: 760px;
+  margin: auto;
+}
+
+.admin-search__result {
+  display: flex;
+  padding: var(--spacing-component-padding);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.admin-search__result p {
+  margin: 0;
+}
+
+.admin-search__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+  flex: 1;
+}
+
+.admin-search__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-component-padding);
+}
+
+.admin-sale {
+  padding: var(--spacing-component-padding);
+}
+
+.admin-sale__film-card,
+.admin-sale__session-card {
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.admin-sale__session-card {
+  text-align: left;
+}
+
+/* Analyse du taux de remplissage */
+.admin-analysis-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis {
+  max-width: 1280px;
+  align-self: flex-start;
+  padding: var(--spacing-component-padding);
+}
+
+
+
+
+.admin-analysis__results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+}
+
+.admin-analysis__row {
+  display: flex;
+  gap: var(--spacing-component-padding);
+}
+
+.admin-analysis__session {
+  display: flex;
+  flex: 0 1 714px;
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 16px;
+  background: var(--color-main);
+}
+
+.admin-analysis__session > span {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-icon-label);
+  padding: var(--spacing-icon-label);
+}
+
+.admin-analysis__film,
+.admin-analysis__date {
+  flex: 1;
+}
+
+.admin-analysis__session svg {
+  flex-shrink: 0;
+  color: var(--color-light);
+}
+
+.admin-analysis__occupancy {
+  display: flex;
+  align-items: center;
+  flex: 0 1 270px;
+  gap: var(--spacing-icon-label);
+}
+
+.admin-analysis__session--high-attendance {
+  background: var(--color-danger);
+}
+
+.admin-analysis__track {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--color-surface);
+}
+
+.admin-analysis__track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.admin-sale__film-card:focus-visible,
+.admin-sale__session-card:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+.admin-sale__film-card--selected,
+.admin-sale__session-card--selected {
+  border: 1px solid var(--color-gold-primary);
+}
+
+.admin-sale__seats {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-gold-primary);
+}
+
+.status-badge::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-success);
+}
+
+.status-badge--cancelled::before {
+  background: var(--color-danger);
+}
+
+.admin-seance-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding) 0;
+}
+
+.admin-seance-form label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-icon-label);
+}
+
+.admin-seance-form input,
+.admin-seance-form select {
+  min-height: 48px;
+  font: var(--typo-body-small);
+}
+
+/* séances */
 
 .sessions__dates {
   display: flex;
@@ -275,6 +560,31 @@ a {
   left: 16px;
 }
 
+/* séances admin */
+.session-card--editing {
+  gap: var(--spacing-icon-label);
+}
+
+.session-card--admin {
+  height: auto;
+  min-height: 150px;
+}
+
+.session-card--admin .session-places {
+  bottom: 70px;
+}
+
+.session-card label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-icon-label);
+}
+
+.session-card__actions {
+  display: flex;
+  gap: var(--spacing-icon-label);
+  margin-top: auto;
+}
 
 /* --- sections --- */
 
@@ -304,7 +614,7 @@ a {
 }
 
 .header__nav {
-  margin-left: 32px;
+  padding: var(--spacing-component-padding);
 }
 
 .header__link {
@@ -312,13 +622,33 @@ a {
   align-items: center;
   height: 40px;
   padding: var(--spacing-component-padding);
-  border-left: 3px solid var(--color-gold-primary);
   color: var(--color-gold-primary);
   font: var(--typo-button);
 }
 
+.header__admin-link {
+  margin: var(--spacing-icon-label);
+}
+
+.header__admin-link.button-black svg,
+.mobile-nav .button-black svg {
+  color: var(--color-gold-primary);
+}
+
 #login-button {
   margin-left: auto;
+}
+
+.user-icon {
+  display: inline-flex;
+  margin-left: auto;
+  color: var(--color-text-primary);
+}
+
+.user-icon svg {
+  width: 30px;
+  height: 30px;
+  stroke-width: 1.8;
 }
 
 /* Footer */
@@ -357,6 +687,11 @@ a {
   margin: 0 auto;
 }
 
+.catalog__admin-action {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-component-padding);
+}
 
 .panel__arrow {
   position: absolute;
@@ -419,6 +754,7 @@ a {
   display: flex;
   justify-content: center;
   margin-top: 90px;
+  gap: var(--spacing-component-padding);
 }
 
 .modal__actions .button-gold,
@@ -442,19 +778,162 @@ a {
 }
 
 
-/* Catalogue films */
+/* commun */
 
-.catalog {
+.admin-sale-page,
+.catalog,
+.film-detail,
+.reservation-page,
+.client-account-page {
   display: flex;
   justify-content: center;
   padding: var(--spacing-component-padding);
 }
 
-/* detail film */
-.film-detail {
-  display: flex;
-  justify-content: center;
+
+/* Reservation */
+.reservation-panel {
+  width: fit-content;
+  max-width: 100%;
   padding: var(--spacing-component-padding);
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-component-padding);
+  margin: var(--spacing-icon-label);
+}
+
+.reservation-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-icon-label);
+}
+
+.reservation-form__field input {
+  padding: var(--spacing-component-padding);
+  border: 1px solid var(--color-gold-primary);
+  border-radius: 8px;
+  background: var(--color-main);
+}
+
+/* Seat reservation */
+.seat-reservation {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--spacing-component-padding);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.seat-reservation__plan {
+  min-width: 0;
+}
+
+.seat-reservation__viewport {
+  position: relative;
+}
+
+.seat-reservation__scroll {
+  overflow-x: auto;
+}
+
+.seat-reservation__map-zoom {
+  display: none;
+}
+
+.seat-reservation__map {
+  width: max-content;
+}
+
+.seat-reservation__screen {
+  fill: none;
+  stroke: var(--color-text-primary);
+  filter: drop-shadow(0 3px 4px var(--color-gold-primary));
+}
+
+.seat-reservation__seats {
+  width: 100%;
+  border-spacing: 12px 3px;
+}
+
+.seat-reservation__seat {
+  display: block;
+  width: 24px;
+  height: 20px;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--color-muted);
+  border-radius: 4px;
+  background: transparent;
+}
+
+.seat-reservation__seat--selected {
+  border-color: var(--color-light);
+  background: var(--color-light);
+}
+
+.seat-reservation__seat--unavailable {
+  background: var(--color-muted);
+}
+
+.seat-reservation__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: var(--spacing-component-padding);
+  width: 100%;
+  padding: 0;
+  list-style: none;
+}
+
+.seat-reservation__legend li {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-icon-label);
+}
+
+.seat-reservation__summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-component-padding);
+}
+
+.seat-reservation__summary p {
+  margin: 0;
+}
+
+.seat-reservation__summary .reservation-form {
+  flex: 1;
+  align-items: flex-start;
+  margin: 0;
+  width: 100%;
+}
+
+.seat-reservation__summary .reservation-form .button-black {
+  align-self: center;
+  margin-top: auto;
+}
+
+.seat-reservation__selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-component-padding);
+  padding: 0;
+  list-style: none;
+}
+
+button.seat-reservation__seat:hover:not(:disabled),
+.seat-reservation__seat:focus-visible {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+}
+
+.seat-reservation button:disabled {
+  cursor: not-allowed;
 }
 
 /* Auth */
@@ -523,4 +1002,39 @@ a {
 .auth-form .button-black,
 .auth-form .lien {
   align-self: center;
+}
+
+/* Espace client */
+.client-account {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-component-padding);
+}
+
+
+
+.client-reservations__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-component-padding);
+}
+
+.client-reservation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-component-padding);
+  padding: var(--spacing-component-padding);
+  border-radius: 8px;
+  background: var(--color-surface);
+}
+
+.client-reservation__details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.client-reservation__details svg {
+  color: var(--color-gold-primary);
 }

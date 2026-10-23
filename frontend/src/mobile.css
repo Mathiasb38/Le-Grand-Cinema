@@ -8,14 +8,87 @@
     flex-direction: column;
     align-items: center;
   }
+
   .auth-page .display-xl {
     margin: 40px 0 0;
     text-align: center;
     width: auto;
   }
+
   .auth-panel {
     width: 70%;
     min-width: 330px;
+  }
+
+  .film-info__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .film-info__info {
+    width: 100%;
+    text-align: center;
+  }
+
+  .admin-film-info__form .button-gold {
+    align-self: center;
+  }
+
+  .admin-seance-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-search,
+  .admin-sale {
+    width: 100%;
+  }
+
+  .admin-search__form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-search__result {
+    flex-direction: column;
+  }
+
+  .seat-reservation {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .admin-analysis__row {
+    flex-direction: column;
+  }
+
+  .admin-analysis__session,
+  .admin-analysis__occupancy {
+    flex-basis: auto;
+  }
+
+  .header {
+    height: auto;
+    min-height: 80px;
+  }
+
+  .header__admin-links {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .header__admin-link {
+    padding: 8px 12px;
+    gap: 6px;
+    font: var(--typo-body-small);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .header__admin-link svg {
+    width: 20px;
+    height: 20px;
   }
 
 }
@@ -44,7 +117,35 @@
     display: none;
   }
 
+  .admin-analysis {
+    width: 100%;
+    margin: 0;
+  }
+
+  .admin-analysis__session {
+    flex-wrap: wrap;
+    gap: var(--spacing-icon-label);
+    font: var(--typo-body-small);
+  }
+
+  .admin-analysis__session > span {
+    padding: 0;
+  }
+
+  .admin-analysis__film,
+  .admin-analysis__date {
+    flex-basis: 100%;
+  }
+
+  .header__admin-link {
+    display: none;
+  }
+
   #login-button {
+    display: none;
+  }
+
+  .user-icon {
     display: none;
   }
 
@@ -120,24 +221,75 @@
     display: none;
   }
 
-  /* Film detail */
-
-  .film-info__summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .catalog__admin-action {
+    justify-content: center;
   }
 
+  /* Film detail */
 
-  .film-info__info {
+
+
+
+
+
+  /* Reservation */
+  .reservation-panel {
     width: 100%;
-    text-align: center;
+    padding: 16px;
+  }
+
+  .seat-reservation {
+    width: 100%;
+  }
+
+  .seat-reservation__map-zoom {
+    display: block;
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-in;
+  }
+
+  .seat-reservation__map-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__map {
+    width: 100%;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats {
+    table-layout: fixed;
+    border-spacing: 2px;
+    font-size: 9px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats thead th {
+    padding-bottom: 8px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__seats .seat-reservation__seat {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 6 / 5;
+    border-radius: 2px;
+  }
+
+  .seat-reservation__plan:not(.seat-reservation__plan--zoomed) .seat-reservation__screen {
+    width: calc(100% - 16px);
+    height: 24px;
+    margin: 0 0 8px 16px;
   }
 
   /* Auth */
   .auth-page .display-xl {
     width: auto;
   }
+
   .auth-page__hero {
     flex: 0;
   }
@@ -148,6 +300,12 @@
 
   .modal__actions {
     gap: 24px;
+  }
+
+  /* Client panel */
+  .client-reservation {
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
 }

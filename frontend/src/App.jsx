@@ -5,8 +5,14 @@ import Footer from './components/sections/Footer.jsx'
 import Header from './components/sections/Header.jsx'
 import FilmCatalog from './pages/FilmCatalog.jsx'
 import FilmDetail from './pages/FilmDetail.jsx'
+import AdminLogin from './pages/AdminLogin.jsx'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
+import Reservation from './pages/Reservation.jsx'
+import ClientAccount from './pages/ClientAccount.jsx'
+import AdminSearch from './pages/AdminSearch.jsx'
+import AdminSale from './pages/AdminSale.jsx'
+import AdminAnalysis from './pages/AdminAnalysis.jsx'
 
 export default App
 
@@ -26,8 +32,16 @@ function App() {
         } />
         <Route path="/films" element={<FilmCatalog />} />
         <Route path="/films/:idFilm" element={<FilmDetail />} />
+        <Route path="/reservation/:idSeance" element={<Reservation />} />
+        <Route path="/compte" element={<ClientAccount />} />
         <Route path="/connexion" element={<Login />} />
         <Route path="/inscription" element={<Register />} />
+        <Route path="/admin/connexion" element={<AdminLogin />} />
+        <Route path="/admin/films/nouveau" element={<FilmDetail isNew />} />
+        <Route path="/admin/recherche" element={<AdminSearch />} />
+        <Route path="/admin/ventes" element={<AdminSale />} />
+        <Route path="/admin/analyse" element={<AdminAnalysis />} />
+
       </Routes>
       <Footer />
     </div>

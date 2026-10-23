@@ -7,3 +7,4 @@ pytest
 uvicorn[standard]
 bcrypt
 email-validator
+PyJWT

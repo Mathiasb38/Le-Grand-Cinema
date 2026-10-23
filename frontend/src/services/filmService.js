@@ -1,3 +1,5 @@
+import { apiRequest } from './api.js'
+
 const API_URL = import.meta.env.VITE_API_URL
 
 export async function getFilms() {
@@ -28,4 +30,90 @@ export async function getFilmSessions(idFilm, date) {
   }
 
   return response.json()
+}
+
+export async function getSeancePlaces(idSeance, token) {
+  return apiRequest(`/seances/${idSeance}/places`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function getAdminFilms(token) {
+  return apiRequest('/admin/films', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function getAdminFilmDetails(idFilm, token) {
+  return apiRequest(`/admin/films/${idFilm}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function getAdminSeanceTaux(filters, token) {
+  const params = new URLSearchParams()
+  if (filters.dateDebut) params.set('date_debut', filters.dateDebut)
+  if (filters.dateFin) params.set('date_fin', filters.dateFin)
+  if (filters.idFilm) params.set('id_film', filters.idFilm)
+  if (filters.idSalle) params.set('id_salle', filters.idSalle)
+  return apiRequest(`/admin/remplissage?${params}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminFilm(film, token) {
+  return apiRequest('/admin/films', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(film),
+  })
+}
+
+export async function updateAdminFilm(idFilm, film, token) {
+  return apiRequest(`/admin/films/${idFilm}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(film),
+  })
+}
+
+export async function getAdminSalles(token) {
+  return apiRequest('/admin/salles', {
+    headers: { Authorization: `Bearer ${token}` },
+  })
+}
+
+export async function createAdminSeance(seance, token) {
+  return apiRequest('/admin/seances', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(seance),
+  })
+}
+
+export async function updateAdminSeance(idSeance, seance, token) {
+  return apiRequest(`/admin/seances/${idSeance}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(seance),
+  })
+}
+
+export async function deleteAdminSeance(idSeance, token) {
+  return apiRequest(`/admin/seances/${idSeance}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  })
 }

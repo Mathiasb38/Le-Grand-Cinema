@@ -1,12 +1,35 @@
-from datetime import date
+from datetime import date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Film
-from app.schemas import FilmDetailsResponse, FilmResponse, SeanceResponse
-from app.services.film_service import get_film_details, get_programmed_films
+from app.models import Film, Salle, Utilisateur
+from app.schemas import (
+    FilmDetailsResponse,
+    FilmResponse,
+    SeanceResponse,
+    FilmWrite,
+    SeanceCreate,
+    SalleResponse,
+    SeanceUpdate,
+    PlaceResponse,
+    SeanceRemplissageResponse,
+)
+from app.services.film_service import (
+    get_film_details,
+    get_programmed_films,
+    get_all_films,
+    create_film,
+    update_film,
+    create_seance,
+    get_all_salles,
+    update_seance,
+    delete_seance,
+    get_seance_places,
+    get_seance_taux,
+)
+from app.services.auth_service import require_admin, get_current_user
 
 router = APIRouter()
 
@@ -34,3 +57,95 @@ def film_seances(id_film: int, date: date, session: Session = Depends(get_db)) -
         raise HTTPException(status_code=404, detail="Film introuvable")
 
     return film.seances
+
+
+@router.get("/seances/{id_seance}/places", response_model=list[PlaceResponse])
+def seance_places(
+    id_seance: int,
+    current_user: Utilisateur = Depends(get_current_user),
+    session: Session = Depends(get_db),
+) -> list[PlaceResponse]:
+    if current_user.role not in {"client", "admin"}:
+        raise HTTPException(status_code=403, detail="Accès réservé aux clients et administrateurs")
+
+    places = get_seance_places(session, id_seance)
+    if places is None:
+        raise HTTPException(status_code=404, detail="Séance introuvable")
+
+    return places
+
+
+@router.get("/admin/films", response_model=list[FilmResponse], dependencies=[Depends(require_admin)])
+def admin_list_films(session: Session = Depends(get_db)) -> list[Film]:
+    return get_all_films(session)
+
+
+@router.get("/admin/films/{id_film}", response_model=FilmDetailsResponse, dependencies=[Depends(require_admin)])
+def admin_film_details(id_film: int, session: Session = Depends(get_db)) -> FilmDetailsResponse:
+    film = get_film_details(session, id_film)
+
+    if film is None:
+        raise HTTPException(status_code=404, detail="Film introuvable")
+
+    return film
+
+
+@router.get(
+    "/admin/remplissage",
+    response_model=list[SeanceRemplissageResponse],
+    dependencies=[Depends(require_admin)],
+)
+def admin_seance_taux(
+    date_debut: datetime | None = None,
+    date_fin: datetime | None = None,
+    id_film: int | None = None,
+    id_salle: int | None = None,
+    session: Session = Depends(get_db),
+) -> list[SeanceRemplissageResponse]:
+    if (date_debut is None) != (date_fin is None):
+        raise HTTPException(422, "Les deux dates sont requises ensemble")
+    if date_debut is None and id_film is None and id_salle is None:
+        raise HTTPException(422, "Au moins un filtre est requis")
+
+    return get_seance_taux(session, date_debut, date_fin, id_film, id_salle)
+
+
+@router.post("/admin/films", response_model=FilmResponse, status_code=201, dependencies=[Depends(require_admin)])
+def admin_create_film(film_data: FilmWrite, session: Session = Depends(get_db)) -> Film:
+    return create_film(session, film_data)
+
+
+@router.put("/admin/films/{id_film}", response_model=FilmResponse, dependencies=[Depends(require_admin)])
+def admin_update_film(id_film: int, film_data: FilmWrite, session: Session = Depends(get_db)) -> Film:
+    film = update_film(session, id_film, film_data)
+
+    if film is None:
+        raise HTTPException(status_code=404, detail="Film introuvable")
+
+    return film
+
+
+@router.post("/admin/seances", response_model=SeanceResponse, status_code=201, dependencies=[Depends(require_admin)])
+def admin_create_seance(seance_data: SeanceCreate, session: Session = Depends(get_db)) -> SeanceResponse:
+    return create_seance(session, seance_data)
+
+
+@router.put("/admin/seances/{id_seance}", response_model=SeanceResponse, dependencies=[Depends(require_admin)])
+def admin_update_seance(
+    id_seance: int,
+    seance_data: SeanceUpdate,
+    session: Session = Depends(get_db),
+) -> SeanceResponse:
+    return update_seance(session, id_seance, seance_data)
+
+
+@router.delete("/admin/seances/{id_seance}", status_code=204, dependencies=[Depends(require_admin)])
+def admin_delete_seance(id_seance: int, session: Session = Depends(get_db)) -> None:
+    delete_seance(session, id_seance)
+
+
+@router.get("/admin/salles", response_model=list[SalleResponse], dependencies=[Depends(require_admin)])
+def admin_list_salles(session: Session = Depends(get_db)) -> list[Salle]:
+    return get_all_salles(session)
+
+

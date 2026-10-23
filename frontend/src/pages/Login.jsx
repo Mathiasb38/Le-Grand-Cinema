@@ -1,8 +1,29 @@
+import { useState } from 'react'
+
 import AuthPanel from '../components/groups/AuthPanel.jsx'
+import Modal from '../components/sections/Modal.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { useNavigate } from 'react-router-dom'
 
 export default Login
 
 function Login() {
+  const [modal, setModal] = useState(null)
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  async function handleSubmit({ email, password, clearForm }) {
+    setModal(null)
+
+    try {
+      await login(email, password)
+      clearForm()
+      navigate('/compte')
+    } catch (error) {
+      setModal({ type: 'error', message: error.message })
+    }
+  }
+
   return (
     <main className="auth-page">
       <section className="auth-page__hero hero">
@@ -13,8 +34,10 @@ function Login() {
         ariaLabel="Connexion"
         linkLabel="Créer un compte"
         linkTo="/inscription"
+        onSubmit={handleSubmit}
         submitLabel="Connexion"
       />
+      {modal && <Modal {...modal} onClose={() => setModal(null)} />}
     </main>
   )
 }
